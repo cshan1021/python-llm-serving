@@ -5,6 +5,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 # vml
 import cv2
+import gc
 import numpy as np
 from python_gemma import vlm_gemma
 
@@ -44,6 +45,8 @@ async def analyze_images(files: List[UploadFile] = File(...)):
             result = vlm_gemma([cv2_image])
             result['idx'] = idx
             results.append(result)
+            # 메모리 정리
+            gc.collect()
     
     except Exception as e:
         print(f"[Server Error] {e}")
