@@ -13,15 +13,17 @@ python -m venv .venv 또는 py -m venv .venv
 * ollama 라이브러리
 python -m pip install ollama
 
-* gemma4 vl
+* gemma4 vl 모델 다운로드
 ollama pull gemma4:e2b
-python python-ollama-gemma4.py
 
 * FastAPI - 웹서비스
 python -m pip install fastapi uvicorn python-multipart
 python -m pip install opencv-python
-python python-ollama-web.py
+python python_web.py
 
 * 테스트
 http://localhost:8090/
 http://localhost:8090/docs
+
+* llava
+ollama pull llava:7b

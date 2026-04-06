@@ -2,7 +2,7 @@
 import uvicorn
 from typing import List
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 # vml
 import cv2
 import numpy as np
@@ -20,10 +20,9 @@ async def analyze_images(files: List[UploadFile] = File(...)):
     if not files or len(files) == 0:
         raise HTTPException(status_code=400, detail="이미지 파일이 전송되지 않았습니다.")
     
+    results = []
     try:
         # 이미지 변환
-        # image_full_path = './data/image/1.jpg'
-        # cv2_image = cv2.imread(image_full_path)
         cv2_images = []
         for file in files:
             if not file.content_type.startswith("image/"):
@@ -41,13 +40,16 @@ async def analyze_images(files: List[UploadFile] = File(...)):
             raise HTTPException(status_code=400, detail="읽을 수 있는 이미지 파일이 없습니다.")
         
         # 이미지 분석
-        result = vlm_gemma(cv2_images)
+        for idx, cv2_image in enumerate(cv2_images):
+            result = vlm_gemma([cv2_image])
+            result['idx'] = idx
+            results.append(result)
     
     except Exception as e:
         print(f"[Server Error] {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-    return result
+    return JSONResponse(content={"status": "success", "data": results})
 
 if __name__ == "__main__":
     # 8090 포트로 서버 실행
