@@ -1,0 +1,40 @@
+import base64
+import cv2
+import numpy as np
+import json
+import ollama
+
+prompt_text = '''
+    이 이미지에서 모든 텍스트를 누락 없이 전부 추출해.
+    요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.
+'''
+
+def vlm_gemma(cv2_images):
+    prompt_images = []
+    for cv2_image in cv2_images:
+        _, buffer = cv2.imencode('.jpg', cv2_image)
+        prompt_images.append(base64.b64encode(buffer).decode('utf-8'))
+    
+    if not prompt_images:
+        print("유효하게 인코딩된 이미지가 0개입니다.")
+        return {}
+
+    try:
+        response = ollama.chat(
+            model='gemma4:e2b',
+            format='json',
+            messages=[{
+                'role': 'user',
+                'content': prompt_text,
+                'images': prompt_images
+            }],
+        )
+        content = response.message.content
+        # 모델이 마크다운 태그를 붙여줬을 경우를 대비한 정제
+        content = content.replace('```json', '').replace('```', '').strip()
+        print(content)
+        return json.loads(content)
+    
+    except Exception as e:
+        print(f"[Gemma 분석 에러] {e}")
+        return {"error": str(e)}

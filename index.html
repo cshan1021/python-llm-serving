@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해외직구식품 AI 분석기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loader {
+            border-top-color: #3498db;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* 드래그 중일 때 스타일 */
+        .drag-over {
+            background-color: #ebf8ff; /* blue-100 */
+            border-color: #4299e1;     /* blue-500 */
+            transform: scale(1.01);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen py-10 px-4">
+    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-blue-600 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">이미지 분석</h1>
+            <p class="text-blue-100 mt-2 text-sm">라벨 사진들을 드래그하여 한 번에 분석하세요.</p>
+        </div>
+
+        <div class="p-8">
+            <div class="mb-8">
+                <label class="block text-sm font-medium text-gray-700 mb-2">이미지 업로드 (다중 선택/드래그 가능)</label>
+                <div id="dropZone" 
+                     class="flex items-center justify-center w-full h-40 border-2 border-blue-300 border-dashed rounded-xl cursor-pointer bg-blue-50 hover:bg-blue-100 transition-all overflow-hidden"
+                     onrateover="event.preventDefault()"
+                     ondragover="handleDragOver(event)"
+                     ondragleave="handleDragLeave(event)"
+                     ondrop="handleDrop(event)"
+                     onclick="document.getElementById('imageInput').click()">
+                    
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6 pointer-events-none">
+                        <svg class="w-10 h-10 mb-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-500 font-semibold text-center">클릭하거나 파일을 이 곳으로 드래그하세요</p>
+                        <p class="text-xs text-gray-400 text-center">PNG, JPG, JPEG</p>
+                    </div>
+                    <input type="file" id="imageInput" class="hidden" accept="image/*" multiple onchange="handleFileSelect(this)" />
+                </div>
+            </div>
+
+            <div id="previewWrapper" class="hidden mb-8">
+                <h3 class="text-sm font-semibold text-gray-600 mb-3">선택된 이미지 미리보기</h3>
+                <div id="imagePreviewGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="resetAll()" class="flex-1 py-3 px-4 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition-all">초기화</button>
+                <button onclick="startAnalysis()" id="submitBtn" class="flex-[2] py-3 px-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">분석 시작하기</button>
+            </div>
+
+            <div id="loadingArea" class="hidden mt-10 text-center">
+                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4 mx-auto"></div>
+                <p class="text-blue-600 font-medium">Gemma VLM 분석 중...</p>
+            </div>
+
+            <div id="resultArea" class="hidden mt-10">
+                <div class="border-t pt-8">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                        <span class="w-2 h-6 bg-blue-500 rounded-full mr-3"></span>분석 리포트
+                    </h2>
+                    <div class="space-y-6">
+                        <div class="bg-blue-50 border border-blue-100 p-5 rounded-2xl">
+                            <h4 class="text-blue-700 font-bold mb-2 text-sm tracking-wider">SUMMARY</h4>
+                            <p id="summaryText" class="text-gray-800"></p>
+                        </div>
+                        <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl">
+                            <h4 class="text-gray-600 font-bold mb-2 text-sm tracking-wider">CONTENTS</h4>
+                            <div id="contentText" class="text-gray-700 text-sm whitespace-pre-wrap leading-relaxed"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('imageInput');
+
+        // 드래그 이벤트 방지 및 스타일 적용
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('drag-over');
+        }
+
+        // 드롭 시 파일 처리
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('drag-over');
+
+            const dt = e.dataTransfer;
+            const files = dt.files;
+
+            if (files && files.length > 0) {
+                // Input 요소에 파일 할당
+                fileInput.files = files;
+                handleFileSelect(fileInput);
+            }
+        }
+
+        // 파일 선택 시 미리보기 생성
+        function handleFileSelect(input) {
+            const wrapper = document.getElementById('previewWrapper');
+            const grid = document.getElementById('imagePreviewGrid');
+            grid.innerHTML = '';
+
+            if (input.files && input.files.length > 0) {
+                wrapper.classList.remove('hidden');
+                Array.from(input.files).forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const div = document.createElement('div');
+                            div.className = "relative aspect-square rounded-lg overflow-hidden border shadow-sm";
+                            div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                            grid.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            } else {
+                wrapper.classList.add('hidden');
+            }
+        }
+
+        function resetAll() {
+            fileInput.value = "";
+            document.getElementById('previewWrapper').classList.add('hidden');
+            document.getElementById('resultArea').classList.add('hidden');
+            document.getElementById('loadingArea').classList.add('hidden');
+        }
+
+        async function startAnalysis() {
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingArea = document.getElementById('loadingArea');
+            const resultArea = document.getElementById('resultArea');
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert("분석할 이미지를 선택하거나 드래그해 주세요.");
+                return;
+            }
+
+            const formData = new FormData();
+            Array.from(fileInput.files).forEach(file => {
+                formData.append('files', file);
+            });
+
+            loadingArea.classList.remove('hidden');
+            resultArea.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50');
+
+            try {
+                const response = await fetch('/analyze_images', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('summaryText').innerText = data.summary || "결과 없음";
+                    document.getElementById('contentText').innerText = data.content || "텍스트 없음";
+                    resultArea.classList.remove('hidden');
+                    resultArea.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert("분석 실패: " + (data.detail || "오류 발생"));
+                }
+            } catch (error) {
+                alert("서버 연결에 실패했습니다.");
+            } finally {
+                loadingArea.classList.add('hidden');
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50');
+            }
+        }
+    </script>
+</body>
+</html>
