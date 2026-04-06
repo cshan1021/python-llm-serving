@@ -30,15 +30,22 @@ def vlm_gemma(cv2_images):
             messages=[{
                 'role': 'user',
                 'content': prompt_text,
-                'images': prompt_images
+                'images': prompt_images,
             }],
             # 0: 즉시 해제, 3600: 1시간 유지, -1: 무한 유지 (기본값은 5분)
-            keep_alive=0
+            keep_alive=0,
+            # 실시간 응답 True
+            stream=True
         )
-        content = response.message.content
+
+        content = ""
+        for chunk in response:
+            part = chunk.get('message', {}).get('content', '')
+            content += part
+            print(part, end='', flush=True)
+
         # 모델이 마크다운 태그를 붙여줬을 경우를 대비한 정제
         content = content.replace('```json', '').replace('```', '').strip()
-        print(content)
         return json.loads(content)
     
     except Exception as e:
