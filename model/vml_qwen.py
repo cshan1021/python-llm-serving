@@ -21,7 +21,7 @@ def vlm_qwen(base64_images):
             messages=[{
                 'role': 'user',
                 'content': prompt,
-                'images': base64_images,
+                'images': ["D:/04_workspace/03_git/python-ollama/data/image/1.jpg"],
             }],
             # 0: 즉시 해제, 3600: 1시간 유지, -1: 무한 유지 (기본값은 5분)
             keep_alive=0
