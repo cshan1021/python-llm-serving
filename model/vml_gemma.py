@@ -1,10 +1,9 @@
-import base64
-import cv2
 import json
 import ollama
+from datetime import datetime
 
-# 구조화 중심의 모델
-prompt_text = '''
+# 구조화 중심의 모델 - 1~2분
+prompt = '''
     이 이미지에서 모든 텍스트를 누락 없이 전부 추출해.
     요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.
     [출력 예시]
@@ -14,31 +13,22 @@ prompt_text = '''
     }
 '''
 
-def vlm_gemma(cv2_images):
-    prompt_images = []
-    for cv2_image in cv2_images:
-        _, buffer = cv2.imencode('.jpg', cv2_image)
-        prompt_images.append(base64.b64encode(buffer).decode('utf-8'))
-    
-    if not prompt_images:
-        print("유효하게 인코딩된 이미지가 0개입니다.")
-        return {}
-
+def vlm_gemma(base64_images):
     try:
+        print(f"분석 시작: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
         response = ollama.chat(
             model='gemma4:e2b',
             messages=[{
                 'role': 'user',
-                'content': prompt_text,
-                'images': prompt_images,
+                'content': prompt,
+                'images': base64_images,
             }],
             # 0: 즉시 해제, 3600: 1시간 유지, -1: 무한 유지 (기본값은 5분)
             keep_alive=0
         )
+        print(f"분석 종료: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
 
         content = response['message']['content']
-
-        # 모델이 마크다운 태그를 붙여줬을 경우를 대비한 정제
         content = content.replace('```json', '').replace('```', '').strip()
         return json.loads(content)
     

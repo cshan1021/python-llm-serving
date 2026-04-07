@@ -1,8 +1,21 @@
+import base64
 import cv2
 import numpy as np
-import math
 
 class PythonUtil:
+  @staticmethod
+  def bytes_to_base64(bytes_image, pixel_size=None):
+    nparr = np.frombuffer(bytes_image, np.uint8)
+    cv2_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    
+    if pixel_size:
+      cv2_image = PythonUtil.image_resize(cv2_image, pixel_size)
+
+    _, buffer = cv2.imencode('.jpg', cv2_image)
+    base64_image = base64.b64encode(buffer).decode('utf-8')
+
+    return base64_image
+
   @staticmethod
   def image_resize(cv2_image, pixel_size):
     h, w = cv2_image.shape[:2]
