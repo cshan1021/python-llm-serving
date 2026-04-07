@@ -27,23 +27,16 @@ def vlm_llava(cv2_images):
     try:
         response = ollama.chat(
             model='llava:7b',
-            format='json',
             messages=[{
                 'role': 'user',
                 'content': prompt_text,
                 'images': prompt_images,
             }],
             # 0: 즉시 해제, 3600: 1시간 유지, -1: 무한 유지 (기본값은 5분)
-            keep_alive=0,
-            # 실시간 응답 True
-            stream=True
+            keep_alive=0
         )
 
-        content = ""
-        for chunk in response:
-            part = chunk.get('message', {}).get('content', '')
-            content += part
-            print(part, end='', flush=True)
+        content = response['message']['content']
 
         # 모델이 마크다운 태그를 붙여줬을 경우를 대비한 정제
         content = content.replace('```json', '').replace('```', '').strip()
