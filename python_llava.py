@@ -3,7 +3,7 @@ import cv2
 import json
 import ollama
 
-# 구조화 중심의 모델
+# 설명 중심의 모델
 prompt_text = '''
     이 이미지에서 모든 텍스트를 누락 없이 전부 추출해.
     요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.
@@ -14,7 +14,7 @@ prompt_text = '''
     }
 '''
 
-def vlm_gemma(cv2_images):
+def vlm_llava(cv2_images):
     prompt_images = []
     for cv2_image in cv2_images:
         _, buffer = cv2.imencode('.jpg', cv2_image)
@@ -26,7 +26,7 @@ def vlm_gemma(cv2_images):
 
     try:
         response = ollama.chat(
-            model='gemma4:e2b',
+            model='llava:7b',
             format='json',
             messages=[{
                 'role': 'user',

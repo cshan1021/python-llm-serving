@@ -9,6 +9,9 @@ import cv2
 import gc
 import numpy as np
 from python_gemma import vlm_gemma
+from python_llama import vlm_llama
+from python_llava import vlm_llava
+from python_qwen import vlm_qwen
 
 # 라우터 객체
 router = APIRouter()
@@ -46,7 +49,12 @@ async def analyze_images(files: List[UploadFile] = File(...)):
         
         # 이미지 분석
         for idx, cv2_image in enumerate(cv2_images):
-            result = vlm_gemma([cv2_image])
+            
+            # result = vlm_gemma([cv2_image])
+            # result = vlm_llama([cv2_image])
+            # result = vlm_llava([cv2_image])
+            result = vlm_qwen([cv2_image])
+            
             result['idx'] = idx
             results.append(result)
             # 메모리 정리
