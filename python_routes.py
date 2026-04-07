@@ -8,11 +8,11 @@ from fastapi.responses import FileResponse, JSONResponse
 import cv2
 import gc
 import numpy as np
-from models.ocr_deepseek import ocr_deepseek
-from models.vml_gemma import vlm_gemma
-from models.vml_llama import vlm_llama
-from models.vml_llava import vlm_llava
-from models.vml_qwen import vlm_qwen
+from model.ocr_deepseek import ocr_deepseek
+from model.vml_gemma import vlm_gemma
+from model.vml_llama import vlm_llama
+from model.vml_llava import vlm_llava
+from model.vml_qwen import vlm_qwen
 # util
 from python_util import PythonUtil
 
