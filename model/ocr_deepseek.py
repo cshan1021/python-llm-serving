@@ -1,8 +1,9 @@
-import json
+import os
 import ollama
+from config import settings
 from datetime import datetime
 
-# OCR 모델 - base64 형식 안됨
+# OCR 모델 - 결과 안나옴
 prompt = '''
     <image>\nFree OCR.
 '''
@@ -16,7 +17,7 @@ def ocr_deepseek(base64_images):
             messages=[{
                 'role': 'user',
                 'content': prompt,
-                'images': ["./data/image/1.jpg"],
+                'images': ["D:/04_workspace/03_git/python-ollama/data/image/1.jpg"],
             }],
             # 0: 즉시 해제, 3600: 1시간 유지, -1: 무한 유지 (기본값은 5분)
             keep_alive=0

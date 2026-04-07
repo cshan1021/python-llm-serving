@@ -2,7 +2,7 @@ import json
 import ollama
 from datetime import datetime
 
-# 설명 중심의 모델 - 속도가 엄청 느림
+# 설명 중심의 모델 - 결과 안나옴
 prompt = '''
     이 이미지에서 모든 텍스트를 누락 없이 전부 추출해.
     요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.
@@ -17,7 +17,7 @@ def vlm_qwen(base64_images):
     try:
         print(f"분석 시작: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
         response = ollama.chat(
-            model='qwen3-vl:2b',
+            model='qwen3.5:2b',
             messages=[{
                 'role': 'user',
                 'content': prompt,

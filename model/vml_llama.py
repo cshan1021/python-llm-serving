@@ -2,7 +2,7 @@ import json
 import ollama
 from datetime import datetime
 
-# 추론 중심의 모델 - 느린 시간
+# 추론 중심의 모델 - 결과 안남옴
 prompt = '''
     이 이미지에서 모든 텍스트를 누락 없이 전부 추출해.
     요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.

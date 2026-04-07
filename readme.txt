@@ -19,6 +19,7 @@ ollama pull gemma4:e2b
 * FastAPI - 웹서비스
 python -m pip install fastapi uvicorn python-multipart
 python -m pip install opencv-python
+python -m pip install pydantic-settings
 python python_web.py
 
 * 테스트
@@ -33,14 +34,7 @@ ollama pull llama3.2-vision
 
 * qwen3
 ollama pull qwen3-vl:2b
+ollama pull qwen3.5:2b
 
 * deepseek
 ollama pull deepseek-ocr
-
-
-
-비교 항목,추천 모델,Ollama 명령어
-Gemma와 가장 유사,Llama 4 (8B),ollama run llama4
-코딩 및 한국어 성능,Qwen 2.5/3.5,ollama run qwen2.5
-저사양 / 빠른 속도,Phi-4 Mini,ollama run phi4
-복잡한 논리 추론,DeepSeek-R1,ollama run deepseek-r1

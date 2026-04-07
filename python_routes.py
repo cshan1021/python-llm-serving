@@ -12,12 +12,13 @@ from model.vml_llama import vlm_llama
 from model.vml_llava import vlm_llava
 from model.vml_qwen import vlm_qwen
 # util
+from config import settings
 from python_util import PythonUtil
 
 # 라우터 객체
 router = APIRouter()
 # html 위치
-HTML_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "html")
+HTML_PATH = os.path.join(settings.BASE_PATH, "html")
 
 @router.get("/favicon.ico", include_in_schema=False)
 async def favicon():
