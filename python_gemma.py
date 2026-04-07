@@ -8,8 +8,8 @@ prompt_text = '''
     요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.
     [출력 예시]
     {
-        "summary": "요약내용",
-        "content": "전체내용"
+        "summary": "한글 요약내용",
+        "content": "원문 전체내용"
     }
 '''
 
