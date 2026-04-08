@@ -18,7 +18,8 @@ class Settings(BaseSettings):
         return {
             "num_predict": self.NUM_PREDICT,
             "temperature": self.TEMPERATURE,
-            "top_p": self.TOP_P
+            "top_p": self.TOP_P,
+            "think": False
         }
     
     # 환경 변수

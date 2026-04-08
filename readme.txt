@@ -37,3 +37,21 @@ ollama pull qwen3.5:2b
 
 * deepseek
 ollama pull deepseek-ocr
+
+* InternVL
+ollama pull blaifa/InternVL3_5:4B
+ollama pull blaifa/InternVL3_5:8b
+deepseek-r1 구조화
+ollama pull qwen2.5-coder:7b 구조화
+
+
+* 실행 - 개발자용 - 실행 후 소스 바뀌면 자동 리로드
+uvicorn python_web:app --reload --host 0.0.0.0 --port 8090
+
+* 실행 - 백그라운드 실행/종료 - 리눅스
+nohup uvicorn python_web:app --host 0.0.0.0 --port 8090 &
+fuser -k 8090/tcp
+
+* 실행 - 백그라운드 실행/종료 - 윈도우 PowerShell 관리자 권한
+Start-Process python -ArgumentList "-m uvicorn python_web:app --host 0.0.0.0 --port 8090" -WindowStyle Hidden
+Stop-Process -Id (Get-NetTCPConnection -LocalPort 8090).OwningProcess -Force
