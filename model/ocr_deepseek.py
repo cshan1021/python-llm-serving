@@ -1,9 +1,8 @@
-import os
 import ollama
 from config import settings
 from datetime import datetime
 
-# OCR 모델 - 결과 안나옴
+# OCR 모델
 prompt = '''
     <image>\nFree OCR.
 '''
@@ -11,26 +10,19 @@ prompt = '''
 
 def ocr_deepseek(base64_images):
     try:
-        print(f"분석 시작: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
         response = ollama.chat(
-            model='deepseek-ocr',
-            messages=[{
+            model = 'deepseek-ocr',
+            messages = [{
                 'role': 'user',
                 'content': prompt,
-                'images': ["D:/04_workspace/03_git/python-ollama/data/image/1.jpg"],
+                'images': base64_images,
             }],
-            # 0: 즉시 해제, 3600: 1시간 유지, -1: 무한 유지 (기본값은 5분)
-            keep_alive=0
+            keep_alive = settings.MODEL_KEEP_ALIVE,
+            options = settings.MODEL_OPTIONS
         )
-        print(f"분석 종료: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
-
         content = response['message']['content']
         # ocr 모델이라 내용만 있음
-        content =     {
-            "summary": "",
-            "content": content
-        }
-        return content
+        return {"summary": "", "content": content}
     
     except Exception as e:
         print(f"[분석 에러] {e}")

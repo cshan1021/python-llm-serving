@@ -1,5 +1,6 @@
 import base64
 import cv2
+import json
 import numpy as np
 
 class PythonUtil:
@@ -30,6 +31,12 @@ class PythonUtil:
     return cv2.resize(cv2_image, (target_w, target_h), interpolation=cv2.INTER_AREA)
 
   @staticmethod
-  def save_image(img, save_path):
-      # 이미지를 지정된 경로에 저장합니다.
-      cv2.imwrite(save_path, img)
+  def response_to_json(response):
+      try:
+        content = response['message']['content']
+        content = content.replace('```json', '').replace('```', '').strip()
+        return json.loads(content)
+      except json.JSONDecodeError as e:
+        return {"summary": "parsing_error", "content": content}
+      except Exception as e:
+        return {"summary": "system_error", "content": str(e)}

@@ -1,8 +1,8 @@
-import json
 import ollama
-from datetime import datetime
+from config import settings
+from python_util import PythonUtil
 
-# 추론 중심의 모델 - 결과 안남옴
+# 추론 중심의 모델 - 결과 느림
 prompt = '''
     이 이미지에서 모든 텍스트를 누락 없이 전부 추출해.
     요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.
@@ -15,22 +15,17 @@ prompt = '''
 
 def vlm_llama(base64_images):
     try:
-        print(f"분석 시작: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
         response = ollama.chat(
-            model='llama3.2-vision',
-            messages=[{
+            model = 'llama3.2-vision',
+            messages = [{
                 'role': 'user',
                 'content': prompt,
                 'images': base64_images,
             }],
-            # 0: 즉시 해제, 3600: 1시간 유지, -1: 무한 유지 (기본값은 5분)
-            keep_alive=0
+            keep_alive = settings.MODEL_KEEP_ALIVE,
+            options = settings.MODEL_OPTIONS
         )
-        print(f"분석 종료: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}")
-
-        content = response['message']['content']
-        content = content.replace('```json', '').replace('```', '').strip()
-        return json.loads(content)
+        return PythonUtil.response_to_json(response)
     
     except Exception as e:
         print(f"[분석 에러] {e}")

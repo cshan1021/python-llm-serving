@@ -33,7 +33,6 @@ ollama pull llava:7b
 ollama pull llama3.2-vision
 
 * qwen3
-ollama pull qwen3-vl:2b
 ollama pull qwen3.5:2b
 
 * deepseek

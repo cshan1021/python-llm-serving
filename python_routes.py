@@ -1,5 +1,5 @@
 # web
-import os
+import logging
 from typing import List
 from fastapi import APIRouter
 from fastapi import File, UploadFile, HTTPException, Response, Form
@@ -17,8 +17,6 @@ from python_util import PythonUtil
 
 # 라우터 객체
 router = APIRouter()
-# html 위치
-HTML_PATH = os.path.join(settings.BASE_PATH, "html")
 
 @router.get("/favicon.ico", include_in_schema=False)
 async def favicon():
@@ -26,14 +24,14 @@ async def favicon():
 
 @router.get("/")
 async def index():
-    return FileResponse(os.path.join(HTML_PATH, "index.html"))
+    return FileResponse(settings.HTML_PATH / "index.html")
 
 @router.post("/analyze_images")
 async def analyze_images(
     model: str = Form(""),
     files: List[UploadFile] = File(...)
 ):
-    print(f"model: {model}")
+    logging.info(f"모델 선택: {model}")
     # 파일 업로드 확인
     if not files or len(files) == 0:
         raise HTTPException(status_code=400, detail="이미지 파일이 전송되지 않았습니다.")
@@ -61,10 +59,12 @@ async def analyze_images(
             "deepseek": ocr_deepseek
         }
         model_get = model_map.get(model, vlm_gemma)
-
+    
         for idx, base64_image in enumerate(base64_images):
+            logging.info(f"분석 시작: {idx}")
             result = model_get([base64_image])
-            result['idx'] = idx
+            logging.info(f"분석 종료: {idx}")
+            result["idx"] = idx
             results.append(result)
             # 메모리 정리
             gc.collect()
