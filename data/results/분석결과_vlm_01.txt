@@ -1,0 +1,86 @@
+이미지 사이즈: 512
+NUM_PREDICT: int = 1024   # num_predict: 분석 결과에 대한 길이(작은면 결과 짤려서 파싱 오류)
+TEMPERATURE: float = 0.3  # temperature: 낮으면 일관성 유지
+TOP_P: float = 0.9        # top_p: 낮으면 좁은 답변
+
+- gemma 속도:상 내용:중 일관성:
+Summary
+이 제품은 부형물일 수 있으며, 주당 3정 이상 복용하지 마십시오. 임신 또는 수유 중에는 사용하지 마십시오. 부작용이 발생할 수 있습니다. 성분은 Di-Pac, 마그네슘 스테아레이트, 천연 치료, 실리카 이산화물, 디칼슘 인산염입니다. 미트라기닌: 0mg, 7-하이드록시미트라기닌: 30mg.
+
+Content
+Simply
+THIS PRODUCT CAN BE ADDITIVE.
+It is not recommended to take more than 3 tablets per week. Consult your healthcare professional to determine if this product is right for you. Do not use if pregnant or breastfeeding. May cause discomfort.
+Ingredients: Di-Pac, Magnesium Stearate, Natural Cure, Silicon Dioxide, Dicalcium Phosphate.
+Mitragynine: 0mg, 7-Hydroxymitragynine: 30mg
+Distributed by Simply Labs
+ShopSimply.com
+
+- llama 속도:하 내용:상 일관성:
+**Summary:**
+
+* This product can be addictive.
+* It is not recommended to take more than 3 tablets per week.
+* Consult your healthcare professional before taking this product.
+* Do not use if pregnant or breastfeeding.
+* May cause discomfort.
+* Always start with a lower dose and increase as needed.
+
+**Content:**
+
+* THIS PRODUCT CAN BE ADDICTIVE.
+* It is not recommended to take more than 3 tablets per week. Consult your healthcare professional before taking this product. Do not use if pregnant or breastfeeding. May cause discomfort. Always start with a lower dose and increase as needed. Start with 1/8 to 1/4 a tablet.
+* 1 Serving = 1/4 Tablet. 28 Servings total.
+* WARNING: NOT FOR SALE TO MINORS. KEEP OUT OF REACH OF CHILDREN.
+* By using this product, you assume full responsibility for any adverse events and/or health complications that may result from its use. Manufacturer/retailer assumes no liability for the misuse of this product.
+* This product has not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease.
+* Ingredients: Di-Pac, Magnesium Stearate, Natural and Artificial Flavors, 7-Hydroxymitragynine Extract, Xylitol, Silicon Dioxide, Dicalcium Phosphate.
+* Mitragynine: 0mg. 7-Hydroxymitragynine: 30mg.
+* Distributed by Simply Labs.
+* ShopSimply7.com.
+
+- llava 속도:중 내용:하 일관성:
+이미지에서는 한글로 'Simply 7'이라는 제품의 홍보 라벨과 상품 사진이 함께 있습니다. 라벨에는 'This product can be addictive. Do not take more than 3 tablets per day or breastfeeding.' 문구가 포함되어 있으며, 상품은 간식 형태로 보입니다.
+
+- qwen 속도:중 내용:상 일관성:
+Summary
+단백질 보충제 'Simply7' 의 제품 뒷면 정보입니다. 복용량, 주의사항, 성분, 제조사 등이 포함되어 있습니다.
+
+Content
+Simply7
+
+THIS PRODUCT CAN BE ADDICTIVE.
+
+It is not recommended to take more than 3 tablets per week. Consult your healthcare professional to determine if this product is right for you. Do not use if pregnant or breastfeeding. May cause discomfort. Always start with a lower ring size and increase as needed. Start with 1/8 to 1/4 a tablet.
+
+1 Serving = 1/4 Tablet. 28 Servings total.
+
+WARNING: NOT FOR SALE TO MINORS. KEEP OUT OF REACH OF CHILDREN.
+
+6 45781 86049 0
+
+By using this product, you assume full responsibility for any adverse events and/or health complications that may result from its use. Manufacturer / reseller assumes no liability for the misuse of this product.
+
+This product has not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease.
+
+Ingredients: Di-Pac, Magnesium Stearate, Natural and Artificial Flavors, 7-Hydroxyimitrageynine Extract, Xylitol, Silicon Dioxide, Dicalcium Phosphate.
+
+Mitragynine: 0mg, 7-Hydroxyimitrageynine: 30mg
+
+Distributed by Simply Labs
+
+ShopSimply7.com
+
+
+- deepseek 속도:중 내용:상 일관성:
+Simply7
+THIS PRODUCT CAN BE ADDICTIVE.
+It is not recommended to take more than 3 tablets per week. Consult your healthcare professional to determine if this product is right for you. Do not use if pregnant or breastfeeding. May cause discomfort. Always start with a lower serving size and increase as needed. Start with 1/8 to 1/4 a tablet.
+1 Serving = 1/4 Tablet. 28 Servings total.
+WARNING: NOT FOR SALE TO MINORS. KEEP OUT OF REACH OF CHILDREN.
+By using this product, you assume full responsibility for any adverse events and/or health complications that may result from its use. Manufacturer / reseller assumes no liability for the misuse of this product.
+This product has not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease.
+Ingredients: Di-Pac, Magnesium Stearate, Natural and Artificial Flavors, 7-Hydroxymitragynine Extract, Xylitol, Silicon Dioxide, Dicalcium Phosphate.
+Mitragynine: 0mg. 7-Hydroxymitragynine: 30mg
+Distributed by Simply Labs
+ShopSimply7.com

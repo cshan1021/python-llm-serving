@@ -10,7 +10,7 @@ class Settings(BaseSettings):
 
     # 모델 설정
     MODEL_KEEP_ALIVE: int = 0 # 0:즉시 해제, 3600:1시간 유지, -1:무한 유지 (기본값은 5분)
-    NUM_PREDICT: int = 1024   # num_predict: 분석 결과에 대한 길이(작은면 결과 짤려서 파싱 오류)
+    NUM_PREDICT: int = 2048   # num_predict: 분석 결과에 대한 길이(작은면 결과 짤려서 파싱 오류, 없으면 deepseek 경우 무한 루프)
     TEMPERATURE: float = 0.3  # temperature: 낮으면 일관성 유지
     TOP_P: float = 0.9        # top_p: 낮으면 좁은 답변
     @property

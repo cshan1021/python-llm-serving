@@ -1,0 +1,165 @@
+-gemma
+Summary
+FOCUS 제품에 대한 사용 지침, 활성 성분, Bacomin® 및 Ginkgo biloba 성분, 그리고 정신 기능 및 웰빙 지원에 관한 정보가 포함되어 있습니다.
+
+Content
+FOCUS
+Directions for use
+Adults take 2 capsules with water once daily
+before bed, or as directed by your health care professional.
+Active Ingredients
+Bacomin®
+Night Capsule
+7 mg
+150 mg
+From whole plant
+dy conc.
+Ginkgo biloba
+Vitamin B6
+150 mg
+600 mg
+From dry leaf
+7 mg
+100 mg
+31.04.26
+B: 40502
+EXP
+7 NIGHT CAPSULE
+Natural Remedies Pvt. Ltd.
+Follow us
+BacoMind®
+supports mental recall, 
+mental function and mental wellbeing.
+
+
+--llama
+Content
+The image shows a white plastic bag with a label on it. The label has a yellow border and contains the following text:
+
+* **FOCUS**
+	+ Directions for use: Adults, take 2 capsules with water once daily before bed, or as directed by your healthcare professional.
+	+ Indications: FOCUS combines premium quality, targeted extracts to improve mental focus and concentration.
+	+ Ingredients: Bacopa monnieri (Bacopa), Ginkgo biloba (Ginkgo), Tyrosine, Pyrodoxine (Vitamin B6), Bacopa monnieri (Bacopa).
+	+ Warning: If you experience any adverse effects, discontinue use and consult a healthcare professional. Do not use if you are pregnant, breastfeeding, or under 25 years old.
+
+The background of the image is white, suggesting that the product is being displayed in a clean and neutral environment. Overall, the image appears to be a product label or packaging for a dietary supplement or health product. 
+
+Here is a summary of the image in a few sentences:
+
+The image shows a white plastic bag with a label on it, which contains information about the product's directions for use, indications, ingredients, and warnings. The product is called FOCUS and appears to be a dietary supplement or health product. The background of the image is white, suggesting a clean and neutral environment. 
+
+Here is the content of the image in a few paragraphs:
+
+The product is called FOCUS and is described as a dietary supplement or health product. The label on the bag provides instructions for use, including taking 2 capsules with water once daily before bed or as directed by a healthcare professional. The product is indicated to improve mental focus and concentration, and contains a combination of premium quality, targeted extracts. The ingredients listed on the label include Bacopa monnieri (Bacopa), Ginkgo biloba (Ginkgo), Tyrosine, and Pyrodoxine (Vitamin B6). The label also includes a warning that if you experience any adverse effects, you should discontinue use and consult a healthcare professional. Additionally, it is not recommended to use the product if you are pregnant, breastfeeding, or under 25 years old. 
+
+The image appears to be a product label or packaging for a dietary supplement or health product. The product is called FOCUS and is described as a dietary supplement or health product. The label on the bag provides instructions for use, including taking 2 capsules with water once daily before bed or as directed by a healthcare professional. The product is indicated to improve mental focus and concentration, and contains a combination of premium quality, targeted extracts. The ingredients listed on the label include Bacopa monnieri (Bacopa), Ginkgo biloba (Ginkgo), Tyrosine, and Pyrodoxine (Vitamin B6). The label also includes a warning that if you experience any adverse effects, you should discontinue use and consult a healthcare professional. Additionally, it is not recommended to use the product if you are pregnant, breastfeeding, or under 25 years old. 
+
+Here is a JSON object that represents the image:
+
+{
+    "summary": "The image shows a white plastic bag with a label on it, which contains information about the product's directions for use, indications, ingredients, and warnings.",
+    "content": "The product is called FOCUS and is described as a dietary supplement or health product. The label on the bag provides instructions for use, including taking 2 capsules with water once daily before bed or as directed by a healthcare professional. The product is indicated to improve mental focus and concentration, and contains a combination of premium quality, targeted extracts. The ingredients listed on the label include Bacopa monnieri (Bacopa), Ginkgo biloba (Ginkgo), Tyrosine, and Pyrodoxine (Vitamin B6). The label also includes a warning that if you experience any adverse effects, you should discontinue use and consult a healthcare professional. Additionally, it is not recommended to use the product if you are pregnant, breastfeeding, or under 25 years old."
+}
+
+
+-qwen
+Summary
+7 Night Trial Pack FOCUS - Directions for use, indications, active ingredients, warnings, and company details.
+
+Content
+7 NIGHT TRIAL PACK
+
+R1
+
+FOCUS
+
+Directions for use:
+Adults: Take 2 capsules with water once daily before bed, or as directed by your health care professional.
+
+Indications:
+FOCUS combines premium quality targeted extracts to improve mental focus and concentration.
+Ginkgo supports cognitive function, memory and mental concentration. Ginkgo also maintains brain and heart function.
+Bacopa (Bacomin) supports mental recall, mental function and mental wellbeing in ageing individuals.
+Vitamin B6 aids in the synthesis of neurotransmitters and supports the health and function of the nervous system.
+
+Active Ingredients:
+Bacopa monnieri (Bacomin®) whole plant ext. dry conc. 3 g
+Ginkgo biloba (Ginkgo) from dry leaf 3 g
+Coriandrum sativum (Coriander) whole plant ext. dry conc. 600 mg
+Thyroidine 100 mg
+Pyroxyline Hydrochloride 6.1 mg (Vitamin B6) equi. pyroxyline 5 mg
+
+Warnings:
+If you have any questions, please talk to your health professional. Store below 25°C in a cool dry place.
+
+Rina Pty Ltd
+Married Beach QLD 4111
+info@rinaspa.com.au
+www.rinaspa.com.au
+
+B: 40502
+EXP: 31.04.26
+
+Follow us
+
+
+
+-deepseek
+7 NIGHT TRIAL PACK
+
+FOCUS
+
+**Direction for use:**
+Adults: Take 2 capsules with water once daily before bed, or as directed by your health care professional.
+
+**Indications**
+FOCUS combines premium quality, targeted extracts to improve mental focus and concentration.
+
+Ginkgo supports cognitive function, memory, and mental concentration. Ginkgo also maintains brain health and function.
+
+Bacopa (Bacomind®) supports mental recall, mental function and mental wellbeing in ageing individuals.
+
+Vitamin B6 aids in the synthesis of neurotransmitters and supports the health and function of the nervous system.
+
+**Warning**
+If symptoms persist, talk to your health professional. Store below 25°C in a cool dry place. Do not use if tamper evident seal is broken or missing.
+
+---
+
+**Active Ingredients**
+per Hard Capsule
+
+**Bacopa monnieri** (Bacomind® Baphma)  
+whole plant extract, dry concentrate  
+From whole dry plant: 3 g
+
+**Ginkgo biloba** (Ginkgo)  
+From dry leaf: 60 mg
+
+**Cordyceps sinensis** (Cordyceps) extract, dry concentrate  
+From whole dry plant: 600 mg
+
+**Tyrosinase Inhibitor**  
+**Pyridoxine Hydrochloride**  
+(Thiamin B6)  
+Vitamin B6  
+(equivalent pyridoxine)  
+5 mg
+
+Bacomind® is a registered trademark of Natural Remedies Pvt. Ltd.
+
+---
+
+**Rituva Pty Ltd**  
+Merrivall Beach QLD 4550  
+info@rituva.com.au  
+https://rituva.com.au
+
+---
+
+**B: 40502**  
+**EXP: 31.04.26**
+
+Follow us  
+Instagram  
+LinkedIn
