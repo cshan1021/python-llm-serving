@@ -11,6 +11,7 @@ from model.vml_gemma import vlm_gemma
 from model.vml_llama import vlm_llama
 from model.vml_llava import vlm_llava
 from model.vml_qwen import vlm_qwen
+from model.vml_internvl import vlm_internvl
 # util
 from config import settings
 from python_util import PythonUtil
@@ -56,7 +57,8 @@ async def analyze_images(
             "llama": vlm_llama,
             "llava": vlm_llava,
             "qwen": vlm_qwen,
-            "deepseek": ocr_deepseek
+            "deepseek": ocr_deepseek,
+            "internvl": vlm_internvl,
         }
         model_get = model_map.get(model, vlm_gemma)
     

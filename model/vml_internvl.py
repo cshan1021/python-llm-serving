@@ -14,10 +14,10 @@ prompt = '''
     }
 '''
 
-def vlm_gemma(base64_images):
+def vlm_internvl(base64_images):
     try:
         response = ollama.chat(
-            model = 'gemma4:e2b',
+            model = 'blaifa/InternVL3_5:8b',
             messages = [{
                 'role': 'user',
                 'content': prompt,
