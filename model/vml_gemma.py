@@ -10,14 +10,14 @@ prompt = '''
     [출력 예시]
     {
         "summary": "한글 요약내용",
-        "content": "원문 전체내용"
+        "content": "원문 전체내용(Raw Text Compilation)"
     }
 '''
 
 def vlm_gemma(base64_images):
     try:
         response = ollama.chat(
-            model = 'gemma4:e2b',
+            model = 'gemma4:e4b',
             messages = [{
                 'role': 'user',
                 'content': prompt,

@@ -15,6 +15,7 @@ python -m pip install ollama
 
 * gemma4 vl 모델 다운로드
 ollama pull gemma4:e2b
+ollama pull gemma4:e4b
 
 * FastAPI - 웹서비스
 python -m pip install fastapi uvicorn python-multipart
