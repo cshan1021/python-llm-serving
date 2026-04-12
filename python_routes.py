@@ -6,12 +6,13 @@ from fastapi import File, UploadFile, HTTPException, Response, Form
 from fastapi.responses import FileResponse, JSONResponse
 # vml
 import gc
-from model.ocr_deepseek import ocr_deepseek
-from model.vml_gemma import vlm_gemma
-from model.vml_llama import vlm_llama
-from model.vml_llava import vlm_llava
-from model.vml_qwen import vlm_qwen
-from model.vml_internvl import vlm_internvl
+from model.model_deepseek import model_deepseek
+from model.model_gemma import model_gemma
+from model.model_internvl import model_internvl
+from model.model_llama import model_llama
+from model.model_llava import model_llava
+from model.model_qwen import model_qwen
+
 # util
 from config import settings
 from python_util import PythonUtil
@@ -53,14 +54,14 @@ async def analyze_images(
         
         # 이미지 분석 - 하나씩 따로 분석
         model_map = {
-            "gemma": vlm_gemma,
-            "llama": vlm_llama,
-            "llava": vlm_llava,
-            "qwen": vlm_qwen,
-            "deepseek": ocr_deepseek,
-            "internvl": vlm_internvl,
+            "deepseek": model_deepseek,
+            "gemma": model_gemma,
+            "internvl": model_internvl,
+            "llama": model_llama,
+            "llava": model_llava,
+            "qwen": model_qwen,
         }
-        model_get = model_map.get(model, vlm_gemma)
+        model_get = model_map.get(model, model_gemma)
     
         for idx, base64_image in enumerate(base64_images):
             logging.info(f"분석 시작: {idx}")

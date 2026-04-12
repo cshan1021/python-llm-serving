@@ -8,7 +8,7 @@ prompt = '''
 '''
 # <image>\nFree OCR. Extract all text into JSON: {"summary":"", "content":""}
 
-def ocr_deepseek(base64_images):
+def model_deepseek(base64_images):
     try:
         response = ollama.chat(
             model = 'deepseek-ocr',

@@ -1,30 +1,29 @@
-import logging
 import ollama
 from config import settings
 from python_util import PythonUtil
 
-# 구조화 중심의 모델
+# 추론 중심의 모델 - 결과 느림
 prompt = '''
     이 이미지에서 모든 텍스트를 누락 없이 전부 추출해.
     요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.
     [출력 예시]
     {
         "summary": "한글 요약내용",
-        "content": "원문 전체내용(Raw Text Compilation)"
+        "content": "원문 전체내용"
     }
 '''
 
-def vlm_gemma(base64_images):
+def model_llama(base64_images):
     try:
         response = ollama.chat(
-            model = 'gemma4:e4b',
+            model = 'llama3.2-vision',
             messages = [{
                 'role': 'user',
                 'content': prompt,
                 'images': base64_images,
             }],
             keep_alive = settings.MODEL_KEEP_ALIVE,
-            options =settings.MODEL_OPTIONS
+            options = settings.MODEL_OPTIONS
         )
         return PythonUtil.response_to_json(response)
     

@@ -13,10 +13,10 @@ prompt = '''
     }
 '''
 
-def vlm_qwen(base64_images):
+def model_llava(base64_images):
     try:
         response = ollama.chat(
-            model ='qwen3.5:2b',
+            model = 'llava:7b',
             messages = [{
                 'role': 'user',
                 'content': prompt,
