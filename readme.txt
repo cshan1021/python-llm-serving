@@ -45,5 +45,5 @@ ollama pull blaifa/InternVL3_5:8b
 * 실행 - 개발자용 - 실행 후 소스 바뀌면 자동 리로드
 uvicorn python_app:app --reload --host 0.0.0.0 --port 8090
 
-* 구조화 - [아래의 내용을 번역하지 말고 그대로 json으로 만들어.]
+* 구조화 예정 - [아래의 내용을 번역하지 말고 그대로 json으로 만들어.]
 ollama pull qwen2.5-coder:7b 구조화

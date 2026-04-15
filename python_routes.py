@@ -57,7 +57,7 @@ async def analyze_images(
         if len(base64_images) == 0:
             raise HTTPException(status_code=400, detail="읽을 수 있는 이미지 파일이 없습니다.")
         
-        # 이미지 분석 - 하나씩 따로 분석
+        # 이미지 분석
         model_map = {
             "deepseek": model_deepseek,
             "gemma": model_gemma,
@@ -67,7 +67,7 @@ async def analyze_images(
             "qwen": model_qwen,
         }
         model_get = model_map.get(model, model_gemma)
-    
+        # 여러개 한번에
         idx = 0
         logging.info(f"분석 시작: {idx}")
         result = model_get(base64_images)
@@ -76,6 +76,7 @@ async def analyze_images(
         results.append(result)
         # 메모리 정리
         gc.collect()
+        # 하나씩 여러번
         '''
         for idx, base64_image in enumerate(base64_images):
             logging.info(f"분석 시작: {idx}")
