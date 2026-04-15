@@ -1,6 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
-from typing import Dict, Any
 
 class Settings(BaseSettings):
     # 경로 설정
