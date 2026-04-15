@@ -23,6 +23,10 @@ router = APIRouter()
 async def favicon():
     return Response(status_code=204)
 
+@router.get("/style.css", include_in_schema=False)
+async def stylesheet():
+    return FileResponse(settings.HTML_PATH / "style.css")
+
 @router.get("/")
 async def index():
     return FileResponse(settings.HTML_PATH / "index.html")
@@ -45,7 +49,8 @@ async def analyze_images(
             if not file.content_type.startswith("image/"):
                 continue
             bytes_image = await file.read()
-            base64_images.append(PythonUtil.bytes_to_base64(bytes_image, 512))
+            bytes_image = PythonUtil.bytes_resize(bytes_image, 640)
+            base64_images.append(PythonUtil.bytes_to_base64(bytes_image))
         
         # 이미지 확인
         if len(base64_images) == 0:
@@ -62,6 +67,15 @@ async def analyze_images(
         }
         model_get = model_map.get(model, vlm_gemma)
     
+        idx = 0
+        logging.info(f"분석 시작: {idx}")
+        result = model_get(base64_images)
+        logging.info(f"분석 종료: {idx}")
+        result["idx"] = idx
+        results.append(result)
+        # 메모리 정리
+        gc.collect()
+        '''
         for idx, base64_image in enumerate(base64_images):
             logging.info(f"분석 시작: {idx}")
             result = model_get([base64_image])
@@ -70,7 +84,7 @@ async def analyze_images(
             results.append(result)
             # 메모리 정리
             gc.collect()
-    
+        '''
     except Exception as e:
         print(f"[Server Error] {e}")
         raise HTTPException(status_code=500, detail=str(e))

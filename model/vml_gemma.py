@@ -17,7 +17,7 @@ prompt = '''
 def vlm_gemma(base64_images):
     try:
         response = ollama.chat(
-            model = 'gemma4:e2b',
+            model = 'gemma4:e4b',
             messages = [{
                 'role': 'user',
                 'content': prompt,
@@ -26,7 +26,7 @@ def vlm_gemma(base64_images):
             keep_alive = settings.MODEL_KEEP_ALIVE,
             options =settings.MODEL_OPTIONS
         )
-        return PythonUtil.response_to_json(response)
+        return PythonUtil.ollama_to_json(response)
     
     except Exception as e:
         print(f"[분석 에러] {e}")
