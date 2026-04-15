@@ -1,6 +1,6 @@
 import ollama
-from config import settings
-from python_util import PythonUtil
+from app.core.config import settings
+from app.utils.util_image import UtilImage
 
 # 추론 중심의 모델 - 결과 느림
 prompt = '''
@@ -25,7 +25,7 @@ def model_llama(base64_images):
             keep_alive = settings.MODEL_KEEP_ALIVE,
             options = settings.MODEL_OPTIONS
         )
-        return PythonUtil.ollama_to_json(response)
+        return UtilImage.ollama_to_json(response)
     
     except Exception as e:
         print(f"[분석 에러] {e}")

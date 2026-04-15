@@ -1,5 +1,5 @@
 import ollama
-from config import settings
+from app.core.config import settings
 from datetime import datetime
 
 # OCR 모델

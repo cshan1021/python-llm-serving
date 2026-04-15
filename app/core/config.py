@@ -3,9 +3,11 @@ from pathlib import Path
 
 class Settings(BaseSettings):
     # 경로 설정
-    BASE_PATH: Path = Path(__file__).resolve().parent
+    BASE_PATH: Path = Path(__file__).resolve().parent.parent.parent
     @property
-    def HTML_PATH(self) -> Path: return self.BASE_PATH / "html"
+    def STATIC_PATH(self) -> Path: return self.BASE_PATH / "app" / "static"
+    @property
+    def TEMPLATES_PATH(self) -> Path: return self.BASE_PATH / "app" / "templates"
 
     # 모델 설정
     MODEL_KEEP_ALIVE: int = 0                      # 0:즉시 해제, 3600:1시간 유지, -1:무한 유지 (기본값은 5분)

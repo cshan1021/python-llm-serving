@@ -3,7 +3,7 @@ import cv2
 import json
 import numpy as np
 
-class PythonUtil:
+class UtilImage:
   @staticmethod
   def capture_to_base64(capture_image):
     if isinstance(capture_image, str):
@@ -28,16 +28,16 @@ class PythonUtil:
 
   @staticmethod
   def base64_to_jpg(base64_image):
-    cv2_image = PythonUtil.base64_to_cv2(base64_image)
+    cv2_image = UtilImage.base64_to_cv2(base64_image)
     _, buffer = cv2.imencode(".jpg", cv2_image, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
     base64_image = base64.b64encode(buffer).decode("utf-8")
     return base64_image
   
   @staticmethod
   def base64_resize(base64_image, pixel_size):
-    cv2_image = PythonUtil.base64_to_cv2(base64_image)
-    cv2_image = PythonUtil.cv2_resize(cv2_image, pixel_size)
-    return PythonUtil.cv2_to_base64(cv2_image)
+    cv2_image = UtilImage.base64_to_cv2(base64_image)
+    cv2_image = UtilImage.cv2_resize(cv2_image, pixel_size)
+    return UtilImage.cv2_to_base64(cv2_image)
   
   @staticmethod
   def bytes_to_base64(bytes_image):
@@ -55,9 +55,9 @@ class PythonUtil:
   
   @staticmethod
   def bytes_resize(bytes_image, pixel_size):
-    cv2_image = PythonUtil.bytes_to_cv2(bytes_image)
-    cv2_image = PythonUtil.cv2_resize(cv2_image, pixel_size)
-    return PythonUtil.cv2_to_bytes(cv2_image)
+    cv2_image = UtilImage.bytes_to_cv2(bytes_image)
+    cv2_image = UtilImage.cv2_resize(cv2_image, pixel_size)
+    return UtilImage.cv2_to_bytes(cv2_image)
   
   @staticmethod
   def cv2_to_base64(cv2_image):

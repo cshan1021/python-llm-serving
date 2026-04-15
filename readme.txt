@@ -17,11 +17,16 @@ python -m pip install ollama
 ollama pull gemma4:e2b
 ollama pull gemma4:e4b
 
-* FastAPI - 웹서비스
+* 웹서비스 - fastapi
 python -m pip install fastapi uvicorn python-multipart
-python -m pip install opencv-python
 python -m pip install pydantic-settings
-python python_web.py
+python -m pip install tldextract
+python -m pip install httpx
+python -m pip install jinja2
+
+* 이미지
+python -m pip install opencv-python
+
 
 * 테스트
 http://localhost:8090/
@@ -43,7 +48,7 @@ ollama pull deepseek-ocr
 ollama pull blaifa/InternVL3_5:8b
 
 * 실행 - 개발자용 - 실행 후 소스 바뀌면 자동 리로드
-uvicorn python_app:app --reload --host 0.0.0.0 --port 8090
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8090
 
 * 구조화 예정 - [아래의 내용을 번역하지 말고 그대로 json으로 만들어.]
 ollama pull qwen2.5-coder:7b 구조화

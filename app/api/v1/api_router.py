@@ -14,25 +14,13 @@ from model.model_llava import model_llava
 from model.model_qwen import model_qwen
 
 # util
-from config import settings
-from python_util import PythonUtil
+from app.core.config import settings
+from app.utils.util_image import UtilImage
 
 # 라우터 객체
-router = APIRouter()
+apiRouter = APIRouter()
 
-@router.get("/favicon.ico", include_in_schema=False)
-async def favicon():
-    return Response(status_code=204)
-
-@router.get("/style.css", include_in_schema=False)
-async def stylesheet():
-    return FileResponse(settings.HTML_PATH / "style.css")
-
-@router.get("/")
-async def index():
-    return FileResponse(settings.HTML_PATH / "index.html")
-
-@router.post("/analyze_images")
+@apiRouter.post("/analyze_images")
 async def analyze_images(
     model: str = Form(""),
     files: List[UploadFile] = File(...)
@@ -49,8 +37,8 @@ async def analyze_images(
         if not file.content_type.startswith("image/"):
             continue
         bytes_image = await file.read()
-        bytes_image = PythonUtil.bytes_resize(bytes_image, 640)
-        base64_images.append(PythonUtil.bytes_to_base64(bytes_image))
+        bytes_image = UtilImage.bytes_resize(bytes_image, 640)
+        base64_images.append(UtilImage.bytes_to_base64(bytes_image))
     
     # 이미지 확인
     if len(base64_images) == 0:
