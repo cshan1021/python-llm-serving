@@ -2,7 +2,7 @@ import ollama
 from config import settings
 from python_util import PythonUtil
 
-# 설명 중심의 모델
+# 구조화 중심의 모델
 prompt = '''
     이 이미지에서 모든 텍스트를 누락 없이 전부 추출해.
     요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.
@@ -13,17 +13,17 @@ prompt = '''
     }
 '''
 
-def vlm_qwen(base64_images):
+def model_internvl(base64_images):
     try:
         response = ollama.chat(
-            model ='qwen3.5:2b',
+            model = 'blaifa/InternVL3_5:8b',
             messages = [{
                 'role': 'user',
                 'content': prompt,
                 'images': base64_images,
             }],
             keep_alive = settings.MODEL_KEEP_ALIVE,
-            options = settings.MODEL_OPTIONS
+            options =settings.MODEL_OPTIONS
         )
         return PythonUtil.ollama_to_json(response)
     

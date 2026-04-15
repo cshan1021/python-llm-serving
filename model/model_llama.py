@@ -13,7 +13,7 @@ prompt = '''
     }
 '''
 
-def vlm_llama(base64_images):
+def model_llama(base64_images):
     try:
         response = ollama.chat(
             model = 'llama3.2-vision',

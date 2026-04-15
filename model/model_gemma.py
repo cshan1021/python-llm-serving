@@ -1,4 +1,3 @@
-import logging
 import ollama
 from config import settings
 from python_util import PythonUtil
@@ -10,14 +9,14 @@ prompt = '''
     [출력 예시]
     {
         "summary": "한글 요약내용",
-        "content": "원문 전체내용"
+        "content": "원문 전체내용(Raw Text Compilation)"
     }
 '''
 
-def vlm_internvl(base64_images):
+def model_gemma(base64_images):
     try:
         response = ollama.chat(
-            model = 'blaifa/InternVL3_5:8b',
+            model = 'gemma4:e4b',
             messages = [{
                 'role': 'user',
                 'content': prompt,
