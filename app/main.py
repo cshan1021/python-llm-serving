@@ -8,10 +8,11 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+# logging
 logging.basicConfig(
     level=logging.INFO,
-    format='[%(levelname)s] %(asctime)s %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
+    format="[%(levelname)s] %(asctime)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
     handlers=[logging.StreamHandler(sys.stdout)]
 )
 logger = logging.getLogger(settings.PROJECT_NAME)
