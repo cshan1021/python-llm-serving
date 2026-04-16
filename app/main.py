@@ -2,7 +2,7 @@
 import logging
 import uvicorn
 import sys
-from app.api.v1.api_router import apiRouter
+from app.api.v1.api_v1_router import api_v1_router
 from app.core.config import settings
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
@@ -30,7 +30,7 @@ async def index(request: Request):
     )
 
 # router
-app.include_router(apiRouter, prefix="/api/v1", tags=["api-v1"])
+app.include_router(api_v1_router, prefix="/api/v1", tags=["api-v1"])
 
 if __name__ == "__main__":
     # 8090 포트로 서버 실행

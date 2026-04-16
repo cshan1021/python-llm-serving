@@ -1,26 +1,24 @@
 # web
 import logging
-from typing import List
 from fastapi import APIRouter
-from fastapi import File, UploadFile, HTTPException, Response, Form
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi import File, UploadFile, HTTPException, Form
+from fastapi.responses import JSONResponse
+from typing import List
 # vml
 import gc
-from model.model_deepseek import model_deepseek
-from model.model_gemma import model_gemma
-from model.model_internvl import model_internvl
-from model.model_llama import model_llama
-from model.model_llava import model_llava
-from model.model_qwen import model_qwen
-
+from models.model_deepseek import model_deepseek
+from models.model_gemma import model_gemma
+from models.model_internvl import model_internvl
+from models.model_llama import model_llama
+from models.model_llava import model_llava
+from models.model_qwen import model_qwen
 # util
-from app.core.config import settings
-from app.utils.util_image import UtilImage
+from app.utils import util_image
 
 # 라우터 객체
-apiRouter = APIRouter()
+api_v1_router = APIRouter()
 
-@apiRouter.post("/analyze_images")
+@api_v1_router.post("/analyze_images")
 async def analyze_images(
     model: str = Form(""),
     files: List[UploadFile] = File(...)
@@ -37,8 +35,8 @@ async def analyze_images(
         if not file.content_type.startswith("image/"):
             continue
         bytes_image = await file.read()
-        bytes_image = UtilImage.bytes_resize(bytes_image, 640)
-        base64_images.append(UtilImage.bytes_to_base64(bytes_image))
+        bytes_image = util_image.bytes_resize(bytes_image, 640)
+        base64_images.append(util_image.bytes_to_base64(bytes_image))
     
     # 이미지 확인
     if len(base64_images) == 0:

@@ -1,6 +1,5 @@
 import ollama
 from app.core.config import settings
-from datetime import datetime
 
 # OCR 모델
 prompt = '''

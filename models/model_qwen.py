@@ -1,6 +1,6 @@
 import ollama
 from app.core.config import settings
-from app.utils.util_image import UtilImage
+from app.utils import util_image
 
 # 설명 중심의 모델
 prompt = '''
@@ -13,10 +13,10 @@ prompt = '''
     }
 '''
 
-def model_llava(base64_images):
+def model_qwen(base64_images):
     try:
         response = ollama.chat(
-            model = 'llava:7b',
+            model ='qwen3.5:2b',
             messages = [{
                 'role': 'user',
                 'content': prompt,
@@ -25,7 +25,7 @@ def model_llava(base64_images):
             keep_alive = settings.MODEL_KEEP_ALIVE,
             options = settings.MODEL_OPTIONS
         )
-        return UtilImage.ollama_to_json(response)
+        return util_image.ollama_to_json(response)
     
     except Exception as e:
         print(f"[분석 에러] {e}")
