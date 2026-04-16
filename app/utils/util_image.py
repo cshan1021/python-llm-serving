@@ -1,6 +1,5 @@
 import base64
 import cv2
-import json
 import numpy as np
 
 def capture_to_base64(capture_image):
@@ -72,7 +71,7 @@ def cv2_resize(cv2_image, pixel_size):
     target_w = int(w * (pixel_size / h))
   return cv2.resize(cv2_image, (target_w, target_h), interpolation=cv2.INTER_AREA)
 
-def image_letterbox(cv2_image, box=(640, 640), color=(255, 255, 255)):
+def cv2_letterbox(cv2_image, box=(640, 640), color=(255, 255, 255)):
   if isinstance(box, int):
     box = (box, box)
 
@@ -95,13 +94,3 @@ def image_letterbox(cv2_image, box=(640, 640), color=(255, 255, 255)):
   # 중앙 정렬된 흰색 배경
   boxed = cv2.copyMakeBorder(resized, pad_top, pad_bottom, pad_left, pad_right, cv2.BORDER_CONSTANT, value=color)
   return boxed
-
-def ollama_to_json(response):
-    try:
-      content = response['message']['content']
-      content = content.replace('```json', '').replace('```', '').strip()
-      return json.loads(content)
-    except json.JSONDecodeError as e:
-      return {"summary": "parsing_error", "content": content}
-    except Exception as e:
-      return {"summary": "system_error", "content": str(e)}
