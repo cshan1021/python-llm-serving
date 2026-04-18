@@ -40,5 +40,27 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8090
 http://localhost:8090/
 http://localhost:8090/docs
 
-* 구조화 예정 - [아래의 내용을 번역하지 말고 그대로 json으로 만들어.]
-ollama pull qwen2.5-coder:7b 구조화
+
+* llm serving
+ollama
+LM Studio
+llama.cpp
+ramalama
+koboldcpp
+Jan AI
+Text Generation Web UI
+LoLLMs
+
+* lm-studio
+https://lmstudio.ai/
+
+* llama.cpp
+https://github.com/ggml-org/llama.cpp/releases
+Windows x64 (CPU)
+Windows x64 (CUDA 12) - CUDA 12.4 DLLs
+cudart-llama-bin-win-cuda-12.4-x64.zip
+
+* gemma-4 gguf 모델
+https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/tree/main
+google_gemma-4-E4B-it-Q4_K_M.gguf
+mmproj-google_gemma-4-E4B-it-bf16.gguf
