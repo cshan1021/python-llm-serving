@@ -1,0 +1,67 @@
+import httpx
+import json
+import logging
+from app.core.config import settings
+
+# 구조화 중심의 모델
+prompt = """
+    이 이미지에서 모든 텍스트를 누락 없이 전부 추출해.
+    요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.
+    [출력 예시]
+    {
+        "summary": "한글 요약내용",
+        "content": "원문 전체내용(Raw Text Compilation)"
+    }
+"""
+
+async def text_completion(model):
+    payload = {
+        "model": model,
+        "prompt": prompt,
+        "stream": False
+    }
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(settings.OPENAI_TEXT_ENDPOINT, json=payload, timeout=600.0)
+            response = response.json()
+            return get_content(response)
+        except Exception as e:
+            logging.error(f"오류: {str(e)}")
+            return {}
+
+async def chat_completion(model, base64_images):
+    payload = {
+        "model": model,
+        "messages": [{
+            "role": "user",
+            "content": [
+                {"type": "text", "text": prompt},
+                *[
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{image}"}
+                    } for image in base64_images
+                ]
+            ]
+        }],
+        "stream": False
+    }
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(settings.OPENAI_CHAT_ENDPOINT, json=payload, timeout=600.0)
+            response = response.json()
+            return get_content(response)
+        except Exception as e:
+            logging.error(f"오류: {str(e)}")
+            return {}
+
+def get_content(response):
+    if "text" in response:
+        logging.info("OpenAI Text API입니다.")
+        content = response["text"]
+    elif "choices" in response:
+        logging.info("OpenAI Chat API입니다.")
+        content = response["choices"][0]["message"]["content"]
+
+    content = content.replace("```json", "").replace("```", "").strip()
+    return json.loads(content)
