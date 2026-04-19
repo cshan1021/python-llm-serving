@@ -42,9 +42,9 @@ async def analyze_images(
     idx = 0
     logging.info(f"분석 시작: {idx}")
 
-    result = await serving_ollama.text_completion(model, base64_images)
+    # result = await serving_ollama.text_completion(model, base64_images)
     # result = await serving_ollama.chat_completion(model, base64_images)
-    # result = await serving_openai.chat_completion(model, base64_images)
+    result = await serving_openai.chat_completion(model, base64_images)
 
     logging.info(f"분석 종료: {idx}")
     result["idx"] = idx
