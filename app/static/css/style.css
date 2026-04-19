@@ -56,7 +56,17 @@ body {
 
 /* Select 스타일 */
 .select-wrapper {
+    display: flex;
+    gap: 8px;
     position: relative;
+}
+
+#servingSelect {
+    flex: 1;
+}
+
+#modelSelect {
+    flex: 2;
 }
 
 select {
@@ -78,6 +88,7 @@ select:focus {
 }
 
 .select-arrow {
+     pointer-events: none;
     position: absolute;
     right: 16px;
     top: 50%;

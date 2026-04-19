@@ -10,11 +10,9 @@ class Settings(BaseSettings):
     def TEMPLATES_PATH(self) -> Path: return self.BASE_PATH / "app" / "templates"
 
     # OLLAMA API URL
-    OLLAMA_TEXT_ENDPOINT: str = "http://localhost:11434/api/generate"
-    OLLAMA_CHAT_ENDPOINT: str = "http://localhost:11434/api/chat"
+    OLLAMA_ENDPOINT: str = "http://localhost:11434"
     # OPENAI API URL
-    OPENAI_TEXT_ENDPOINT: str = "http://localhost:8000/v1/completions"
-    OPENAI_CHAT_ENDPOINT: str = "http://localhost:8000/v1/chat/completions"
+    OPENAI_ENDPOINT: str = "http://localhost:8000"
 
     # 환경 변수
     PROJECT_NAME: str = "Python LLM Serving"

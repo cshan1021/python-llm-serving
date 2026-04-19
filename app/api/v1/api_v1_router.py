@@ -16,10 +16,12 @@ api_v1_router = APIRouter()
 
 @api_v1_router.post("/analyze_images")
 async def analyze_images(
-    model: str = Form(""),
+    servingSelect: str = Form(""),
+    modelSelect: str = Form(""),
     files: List[UploadFile] = File(...)
 ):
-    logging.info(f"모델 선택: {model}")
+    logging.info(f"서빙 선택: {servingSelect}")
+    logging.info(f"모델 선택: {modelSelect}")
     # 파일 업로드 확인
     if not files or len(files) == 0:
         raise HTTPException(status_code=400, detail="이미지 파일이 전송되지 않았습니다.")
@@ -42,9 +44,11 @@ async def analyze_images(
     idx = 0
     logging.info(f"분석 시작: {idx}")
 
-    # result = await serving_ollama.text_completion(model, base64_images)
-    # result = await serving_ollama.chat_completion(model, base64_images)
-    result = await serving_openai.chat_completion(model, base64_images)
+    if "ollama" == servingSelect:
+        result = await serving_ollama.text_completion(modelSelect, base64_images)
+        # result = await serving_ollama.chat_completion(modelSelect, base64_images)
+    elif "openai" == servingSelect:
+        result = await serving_openai.chat_completion(modelSelect, base64_images)
 
     logging.info(f"분석 종료: {idx}")
     result["idx"] = idx
