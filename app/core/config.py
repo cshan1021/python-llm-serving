@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     OPENAI_CHAT_ENDPOINT: str = "http://localhost:8000/v1/chat/completions"
 
     # 환경 변수
-    PROJECT_NAME: str = "Python Ollam"
+    PROJECT_NAME: str = "Python LLM Serving"
     DB_URL: str = "sqlite:///./test.db"
     
     # env 파일 설정 (자동으로 파일 읽기)
