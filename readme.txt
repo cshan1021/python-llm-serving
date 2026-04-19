@@ -1,6 +1,6 @@
 * 프로젝트 생성
 git init -b main
-git remote add origin https://github.com/cshan1021/python-ollama
+git remote add origin https://github.com/cshan1021/python-llm-serving
 git pull origin main
 
 * venv 환경 - Python 3.14.4
