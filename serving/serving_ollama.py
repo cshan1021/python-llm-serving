@@ -13,10 +13,7 @@ prompt = """
     }
 """
 
-async def check_model_availability(model):
-    """
-    Ollama API 서버 상태와 요청된 모델의 존재 여부를 확인합니다.
-    """
+async def model_availability(model):
     try:
         tags_url = f"{settings.OLLAMA_ENDPOINT}/api/tags"
 
@@ -38,7 +35,7 @@ async def check_model_availability(model):
     return False
 
 async def text_completion(model, base64_images):
-    if not await check_model_availability(model):
+    if not await model_availability(model):
         return {}
 
     payload = {
@@ -57,7 +54,7 @@ async def text_completion(model, base64_images):
             return {}
 
 async def chat_completion(model, base64_images):
-    if not await check_model_availability(model):
+    if not await model_availability(model):
         return {}
 
     payload = {

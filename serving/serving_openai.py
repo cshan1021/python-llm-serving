@@ -13,10 +13,7 @@ prompt = """
     }
 """
 
-async def check_model_availability(model):
-    """
-    OpenAI API 서버 상태와 요청된 모델의 존재 여부를 확인합니다.
-    """
+async def model_availability(model):
     try:
         models_url = f"{settings.OPENAI_ENDPOINT}/v1/models"
 
@@ -37,7 +34,7 @@ async def check_model_availability(model):
     return False
 
 async def text_completion(model):
-    if not await check_model_availability(model):
+    if not await model_availability(model):
         return {}
 
     payload = {
@@ -55,7 +52,7 @@ async def text_completion(model):
             return {}
 
 async def chat_completion(model, base64_images):
-    if not await check_model_availability(model):
+    if not await model_availability(model):
         return {}
 
     payload = {
