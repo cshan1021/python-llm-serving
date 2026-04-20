@@ -46,6 +46,6 @@ https://huggingface.co/lmstudio-community/gemma-4-E4B-it-GGUF/tree/main
 gemma-4-E4B-it-Q4_K_M.gguf
 mmproj-gemma-4-E4B-it-BF16.gguf
 
-https://huggingface.co/lmstudio-community/Qwen3.5-9B-GGUF/tree/main
-Qwen3.5-9B-Q4_K_M.gguf
-mmproj-Qwen3.5-9B-BF16.gguf
+https://huggingface.co/lmstudio-community/Qwen3.5-4B-GGUF/tree/main
+Qwen3.5-4B-Q4_K_M.gguf
+mmproj-Qwen3.5-4B-BF16.gguf
