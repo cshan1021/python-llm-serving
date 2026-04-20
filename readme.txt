@@ -35,13 +35,13 @@ ollama
 LM Studio
 LocalAI
 
-* llama.cpp - v3 검사 예외 설정 필요 - data/llamacpp bat 파일 참고
+* llama.cpp - v3 검사 예외 설정
 https://github.com/ggml-org/llama.cpp/releases
 Windows x64 (CPU)
 Windows x64 (CUDA 12) - CUDA 12.4 DLLs
 cudart-llama-bin-win-cuda-12.4-x64.zip
 
-* llama.cpp 실행 - 경로 변경
+* llama.cpp 실행 - 설정 변경
 ./data/llamacpp/llama-gemma-4-cuda.bat
 ./data/llamacpp/llama-qwen-3.5-cuda.bat
 
