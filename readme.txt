@@ -1,6 +1,6 @@
 * 프로젝트 생성
 git init -b main
-git remote add origin https://github.com/cshan1021/python-ollama
+git remote add origin https://github.com/cshan1021/python-llm-serving
 git pull origin main
 
 * venv 환경 - Python 3.14.4
@@ -35,7 +35,7 @@ ollama
 LM Studio
 LocalAI
 
-* llama.cpp
+* llama.cpp - v3 검사 예외 설정 필요 - data/llamacpp bat 파일 참고
 https://github.com/ggml-org/llama.cpp/releases
 Windows x64 (CPU)
 Windows x64 (CUDA 12) - CUDA 12.4 DLLs
@@ -50,6 +50,6 @@ https://huggingface.co/lmstudio-community/gemma-4-E4B-it-GGUF/tree/main
 gemma-4-E4B-it-Q4_K_M.gguf
 mmproj-gemma-4-E4B-it-BF16.gguf
 
-https://huggingface.co/lmstudio-community/Qwen3.5-9B-GGUF/tree/main
-Qwen3.5-9B-Q4_K_M.gguf
-mmproj-Qwen3.5-9B-BF16.gguf
+https://huggingface.co/lmstudio-community/Qwen3.5-4B-GGUF/tree/main
+Qwen3.5-4B-Q4_K_M.gguf
+mmproj-Qwen3.5-4B-BF16.gguf
