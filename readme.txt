@@ -26,7 +26,7 @@ ollama pull qwen3.5:4b
 ollama pull llama3.2-vision:11b
 ollama pull llava:7b
 
-* 실행
+* 웹 실행
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8090
 
 * llm serving frameworks
@@ -40,6 +40,10 @@ https://github.com/ggml-org/llama.cpp/releases
 Windows x64 (CPU)
 Windows x64 (CUDA 12) - CUDA 12.4 DLLs
 cudart-llama-bin-win-cuda-12.4-x64.zip
+
+* llama.cpp 실행 - 경로 변경
+./data/llamacpp/llama-gemma-4-cuda.bat
+./data/llamacpp/llama-qwen-3.5-cuda.bat
 
 * gguf 모델
 https://huggingface.co/lmstudio-community/gemma-4-E4B-it-GGUF/tree/main
