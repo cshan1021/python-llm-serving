@@ -1,5 +1,6 @@
 @echo off
 title Gemma 4 Server Runner
+chcp 65001
 
 :: --- 설정 영역: 본인의 경로에 맞게 수정하세요 ---
 set LLAMA_PATH=C:\00_work\00_program\llama-b8833-bin-win-cuda-12.4-x64
