@@ -1,5 +1,4 @@
 @echo off
-title Qwen3.5 Server Runner
 chcp 65001
 
 :: --- 설정 영역: 본인의 경로에 맞게 수정하세요 ---
@@ -10,7 +9,8 @@ set MMPROJ_PATH=C:\00_work\03_model\gguf\Qwen3.5\mmproj-Qwen3.5-4B-BF16.gguf
 set MODEL_ALIAS=qwen3.5:4b
 :: ------------------------------------------
 
-echo [!] Qwen3.5 서버를 시작합니다...
+title %MODEL_ALIAS% Server Runner
+echo [!] %MODEL_ALIAS% 서버를 시작합니다...
 echo [!] 모델: %MODEL_PATH%
 echo [!] 브라우저에서 http://127.0.0.1:"%LLAMA_PORT%"접속
 
