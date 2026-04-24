@@ -55,8 +55,8 @@ async def analyze_images(
         }
     """
     if "ollama" == servingSelect:
-        result = await serving_ollama.text_completion(settings.OLLAMA_ENDPOINT, settings.OLLAMA_API_KEY, modelSelect, prompt, base64_images)
-        # result = await serving_ollama.chat_completion(modelSelect, base64_images)
+        # result = await serving_ollama.text_completion(settings.OLLAMA_ENDPOINT, settings.OLLAMA_API_KEY, modelSelect, prompt, base64_images)
+        result = await serving_ollama.chat_completion(settings.OLLAMA_ENDPOINT, settings.OLLAMA_API_KEY, modelSelect, prompt, base64_images)
     elif "openai" == servingSelect:
         result = await serving_openai.chat_completion(settings.OPENAI_ENDPOINT, settings.OPENAI_API_KEY, modelSelect, prompt, base64_images)
 

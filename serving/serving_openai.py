@@ -25,15 +25,10 @@ async def text_completion(api_url, api_key, model_name, prompt):
     # if not await model_availability(api_url, model_name):
     #    return {}
 
-    headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-    }
-    payload = {
-        "model": model_name,
-        "prompt": prompt,
-        "stream": False
-    }
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+
+    payload = {"model": model_name, "prompt": prompt, "stream": False}
+    
     async with httpx.AsyncClient() as client:
         try:
             response = await client.post(f"{api_url}/v1/completions", headers=headers, json=payload, timeout=300.0)

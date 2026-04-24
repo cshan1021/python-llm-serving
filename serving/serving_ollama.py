@@ -25,16 +25,12 @@ async def text_completion(api_url, api_key, model_name, prompt, base64_images):
     if not await model_availability(api_url, model_name):
         return {}
     
-    headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-    }
-    payload = {
-        "model": model_name,
-        "prompt": prompt,
-        "images": base64_images,
-        "stream": False
-    }
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+
+    payload = {"model": model_name, "prompt": prompt, "stream": False}
+    if base64_images and len(base64_images):
+        payload.update({"images": base64_images})
+        
     async with httpx.AsyncClient() as client:
         try:
             response = await client.post(f"{api_url}/api/generate", headers=headers, json=payload, timeout=300.0)
@@ -48,19 +44,13 @@ async def chat_completion(api_url, api_key, model_name, prompt, base64_images):
     if not await model_availability(api_url, model_name):
         return {}
 
-    headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-    }
-    payload = {
-        "model": model_name,
-        "messages": [{
-            "role": "user",
-            "content": prompt,
-            "images": base64_images,
-        }],
-        "stream": False
-    }
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    
+    message = {"role": "user", "content": prompt}
+    if base64_images and len(base64_images):
+        message.update({"images": base64_images})
+    payload = {"model": model_name, "messages": [message], "stream": False}
+
     async with httpx.AsyncClient() as client:
         try:
             response = await client.post(f"{api_url}/api/chat", headers=headers, json=payload, timeout=300.0)
