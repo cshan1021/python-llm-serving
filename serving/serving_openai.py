@@ -1,68 +1,59 @@
 import httpx
 import json
 import logging
-from app.core.config import settings
 
-prompt = """
-    이 이미지에서 모든 텍스트를 누락 없이 전부 추출해.
-    요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.
-    [출력 예시]
-    {
-        "summary": "한글 요약내용",
-        "content": "원문 전체내용(Raw Text Compilation)"
-    }
-"""
-
-async def model_availability(model):
+async def model_availability(api_url, model_name):
     try:
-        models_url = f"{settings.OPENAI_ENDPOINT}/v1/models"
-
         async with httpx.AsyncClient() as client:
-            response = await client.get(models_url, timeout=5.0)
+            response = await client.get(f"{api_url}/v1/models", timeout=5.0)
             if response.status_code == 200:
                 models_data = response.json().get("data", [])
                 # 모델 ID 목록 추출 및 비교
                 available_models = [m.get("id") for m in models_data if isinstance(m, dict)]
-                if model in available_models:
-                    logging.info(f"모델 '{model}' 사용 가능 확인.")
+                if model_name in available_models:
+                    logging.info(f"모델 '{model_name}' 사용 가능 확인.")
                     return True
-                logging.warning(f"모델 '{model}'이 서버에 존재하지 않습니다. 사용 가능 목록: {available_models}")
+                logging.warning(f"모델 '{model_name}'이 서버에 존재하지 않습니다. 사용 가능 목록: {available_models}")
             else:
                 logging.error(f"API 서버 상태 비정상 (HTTP {response.status_code})")
     except Exception as e:
         logging.error(f"API 서버 연결 또는 모델 확인 중 오류 발생: {str(e)}")
     return False
 
-async def text_completion(model):
+async def text_completion(api_url, api_key, model_name, prompt):
     # 모델명 확인 안함
-    # if not await model_availability(model):
+    # if not await model_availability(api_url, model_name):
     #    return {}
 
+    headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+    }
     payload = {
-        "model": model,
+        "model": model_name,
         "prompt": prompt,
         "stream": False
     }
-    headers = {
-            "Authorization": f"Bearer {settings.OPENAI_API_KEY}",
-            "Content-Type": "application/json"
-    }
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.post(f"{settings.OPENAI_ENDPOINT}/v1/completions", json=payload, headers=headers, timeout=600.0)
+            response = await client.post(f"{api_url}/v1/completions", headers=headers, json=payload, timeout=300.0)
             response = response.json()
             return get_content(response)
         except Exception as e:
             logging.error(f"오류: {str(e)}")
             return {}
 
-async def chat_completion(model, base64_images):
+async def chat_completion(api_url, api_key, model_name, prompt, base64_images):
     # 모델명 확인 안함
-    # if not await model_availability(model):
+    # if not await model_availability(api_url, model_name):
     #    return {}
 
+    headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+    }
     payload = {
-        "model": model,
+        "model": model_name,
         "messages": [{
             "role": "user",
             "content": [
@@ -79,7 +70,7 @@ async def chat_completion(model, base64_images):
     }
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.post(f"{settings.OPENAI_ENDPOINT}/v1/chat/completions", json=payload, timeout=600.0)
+            response = await client.post(f"{api_url}/v1/chat/completions", headers=headers, json=payload, timeout=300.0)
             response = response.json()
             return get_content(response)
         except Exception as e:

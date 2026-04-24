@@ -1,6 +1,7 @@
 # web
 import gc
 import logging
+from app.core.config import settings
 from fastapi import APIRouter
 from fastapi import File, UploadFile, HTTPException, Form
 from fastapi.responses import JSONResponse
@@ -44,11 +45,20 @@ async def analyze_images(
     idx = 0
     logging.info(f"분석 시작: {idx}")
 
+    prompt = """
+        이 이미지에서 모든 텍스트를 누락 없이 전부 추출해.
+        요약내용(summary)과 전체내용(content)을 구분해서 json 형태로 출력해.
+        [출력 예시]
+        {
+            "summary": "한글 요약내용",
+            "content": "원문 전체내용(Raw Text Compilation)"
+        }
+    """
     if "ollama" == servingSelect:
-        result = await serving_ollama.text_completion(modelSelect, base64_images)
+        result = await serving_ollama.text_completion(settings.OLLAMA_ENDPOINT, settings.OLLAMA_API_KEY, modelSelect, prompt, base64_images)
         # result = await serving_ollama.chat_completion(modelSelect, base64_images)
     elif "openai" == servingSelect:
-        result = await serving_openai.chat_completion(modelSelect, base64_images)
+        result = await serving_openai.chat_completion(settings.OPENAI_ENDPOINT, settings.OPENAI_API_KEY, modelSelect, prompt, base64_images)
 
     logging.info(f"분석 종료: {idx}")
     result["idx"] = idx

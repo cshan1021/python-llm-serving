@@ -21,8 +21,8 @@ python -m pip install opencv-python
 윈도우는 https://ollama.com/download/windows
 
 # ollama 모델 다운로드
-ollama pull gemma4:e4b
-ollama pull qwen3.5:4b
+ollama pull gemma4:e2b
+ollama pull qwen3.5:2b
 ollama pull llama3.2-vision:11b
 ollama pull llava:7b
 
