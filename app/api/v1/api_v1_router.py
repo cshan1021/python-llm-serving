@@ -1,5 +1,4 @@
 # web
-import gc
 import logging
 import httpx
 from app.core.config import settings
