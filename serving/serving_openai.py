@@ -21,7 +21,6 @@ async def model_availability(api_url, model_name):
     return False
 
 async def text_completion(api_url, api_key, model_name, prompt):
-    # 모델명 확인 안함
     # if not await model_availability(api_url, model_name):
     #    return {}
 
@@ -39,14 +38,11 @@ async def text_completion(api_url, api_key, model_name, prompt):
             return {}
 
 async def chat_completion(api_url, api_key, model_name, prompt, base64_images):
-    # 모델명 확인 안함
     # if not await model_availability(api_url, model_name):
     #    return {}
 
-    headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-    }
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+
     payload = {
         "model": model_name,
         "messages": [{

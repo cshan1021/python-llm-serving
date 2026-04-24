@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAI Chat Client</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f9; margin: 0; display: flex; height: 100vh; }
+        #sidebar { width: 300px; background: #1a1a1b; color: white; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; }
+        #chat-container { flex: 1; display: flex; flex-direction: column; background: white; position: relative; }
+        #messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        
+        .message { max-width: 80%; padding: 12px 16px; border-radius: 15px; line-height: 1.5; word-wrap: break-word; position: relative; white-space: pre-wrap; }
+        .user-message { align-self: flex-end; background: #007bff; color: white; border-bottom-right-radius: 2px; }
+        .assistant-message { align-self: flex-start; background: #e9e9eb; color: #333; border-bottom-left-radius: 2px; }
+        .message img { max-width: 200px; border-radius: 10px; margin-top: 10px; display: block; border: 1px solid #ddd; }
+
+        #input-area { padding: 20px; border-top: 1px solid #ddd; background: #fff; }
+        #drop-zone { border: 2px dashed #ccc; border-radius: 10px; padding: 10px; margin-bottom: 10px; text-align: center; color: #888; cursor: pointer; }
+        #drop-zone.dragover { background: #e1f5fe; border-color: #007bff; color: #007bff; }
+        
+        .input-wrapper { display: flex; gap: 10px; }
+        textarea { flex: 1; border: 1px solid #ddd; border-radius: 5px; padding: 10px; resize: none; height: 50px; font-size: 16px; outline: none; }
+        button { background: #10a37f; color: white; border: none; border-radius: 5px; padding: 0 20px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0e8466; }
+
+        .config-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 12px; color: #bdc3c7; }
+        input { padding: 8px; border-radius: 4px; border: none; background: #34495e; color: white; }
+
+        #preview-container { display: flex; gap: 10px; margin-bottom: 5px; overflow-x: auto; }
+        .preview-item { position: relative; width: 60px; height: 60px; }
+        .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 5px; }
+        .remove-btn { position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 12px; text-align: center; line-height: 18px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h3>OpenAI Settings</h3>
+    <div class="config-group">
+        <label>Base URL</label>
+        <input type="text" id="apiBase" value="http://localhost:8000">
+    </div>
+    <div class="config-group">
+        <label>Model Name</label>
+        <input type="text" id="modelName" value="gemma4:e2b">
+    </div>
+    <div class="config-group">
+        <label>API Key</label>
+        <input type="password" id="apiKey" value="openai-api-key">
+    </div>
+    <hr style="width: 100%; border: 0.5px solid #444;">
+    <p style="font-size: 11px; color: #95a5a6;">주의: 클라이언트 측에서 API 키를 사용하는 것은 보안에 취약할 수 있습니다.</p>
+</div>
+
+<div id="chat-container">
+    <div id="messages">
+        <div class="message assistant-message">API Key와 모델을 설정한 후 대화를 시작하세요. Vision 지원 모델(gpt-4o 등) 사용 시 이미지 분석이 가능합니다.</div>
+    </div>
+
+    <div id="input-area">
+        <div id="drop-zone">이미지를 클릭하거나 드래그하여 첨부</div>
+        <div id="preview-container"></div>
+        <div class="input-wrapper">
+            <textarea id="userInput" placeholder="메시지를 입력하세요..."></textarea>
+            <button id="sendBtn">전송</button>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="fileInput" accept="image/*" style="display: none;">
+
+<script>
+    const messagesDiv = document.getElementById('messages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('preview-container');
+    
+    let attachedImagesBase64 = []; 
+    let chatHistory = []; // 대화 문맥 유지용
+
+    // --- 파일 처리 ---
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, (ev) => { ev.preventDefault(); ev.stopPropagation(); }));
+    dropZone.addEventListener('dragover', () => dropZone.classList.add('dragover'));
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => { dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+
+    function handleFiles(files) {
+        Array.from(files).forEach(file => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (e) => {
+                    attachedImagesBase64.push(e.target.result);
+                    addPreview(e.target.result);
+                };
+            }
+        });
+    }
+
+    function addPreview(src) {
+        const div = document.createElement('div');
+        div.className = 'preview-item';
+        div.innerHTML = `<img src="${src}"><span class="remove-btn">×</span>`;
+        div.querySelector('.remove-btn').onclick = () => {
+            attachedImagesBase64 = attachedImagesBase64.filter(i => i !== src);
+            div.remove();
+        };
+        previewContainer.appendChild(div);
+    }
+
+    // --- 채팅 로직 ---
+    async function sendMessage() {
+        const text = userInput.value.trim();
+        const apiKey = document.getElementById('apiKey').value;
+        if (!apiKey) { alert("API Key를 입력해주세요."); return; }
+        if (!text && attachedImagesBase64.length === 0) return;
+
+        const apiBase = document.getElementById('apiBase').value.replace(/\/$/, "");
+        const model = document.getElementById('modelName').value;
+
+        // 1. OpenAI용 메시지 구조 생성
+        const userContent = [{ type: "text", text: text }];
+        attachedImagesBase64.forEach(base64 => {
+            userContent.push({ type: "image_url", image_url: { url: base64 } });
+        });
+
+        const userMsgObj = { role: "user", content: userContent };
+        chatHistory.push(userMsgObj);
+
+        // UI 업데이트
+        appendMessage('user', text, [...attachedImagesBase64]);
+        
+        userInput.value = '';
+        attachedImagesBase64 = []; 
+        previewContainer.innerHTML = '';
+
+        try {
+            const response = await fetch(`/api/v1/proxy?${apiBase}/v1/chat/completions`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: model,
+                    messages: chatHistory,
+                    stream: true
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || 'API 호출 실패');
+            }
+
+            const aiMsgDiv = appendMessage('assistant', '');
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let assistantText = "";
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value);
+                const lines = chunk.split('\n');
+
+                for (const line of lines) {
+                    const cleanLine = line.replace(/^data: /, '').trim();
+                    if (!cleanLine || cleanLine === '[DONE]') continue;
+
+                    try {
+                        const json = JSON.parse(cleanLine);
+                        const content = json.choices[0].delta?.content || "";
+                        if (content) {
+                            assistantText += content;
+                            aiMsgDiv.innerText = assistantText;
+                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        }
+                    } catch (e) { console.error("Error parsing JSON", e); }
+                }
+            }
+            chatHistory.push({ role: "assistant", content: assistantText });
+
+        } catch (error) {
+            appendMessage('assistant', '에러 발생: ' + error.message);
+        }
+    }
+
+    function appendMessage(role, text, images = []) {
+        const div = document.createElement('div');
+        div.className = `message ${role}-message`;
+        div.innerText = text;
+
+        images.forEach(imgSrc => {
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            div.appendChild(img);
+        });
+
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        return div;
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+</script>
+
+</body>
+</html>

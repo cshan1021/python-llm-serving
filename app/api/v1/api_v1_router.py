@@ -1,6 +1,7 @@
 # web
 import gc
 import logging
+import httpx
 from app.core.config import settings
 from fastapi import APIRouter
 from fastapi import Form, File, UploadFile, Request, HTTPException
@@ -55,7 +56,6 @@ async def analyze_images(
         }
     """
     if "ollama" == servingSelect:
-        # result = await serving_ollama.text_completion(settings.OLLAMA_ENDPOINT, settings.OLLAMA_API_KEY, modelSelect, prompt, base64_images)
         result = await serving_ollama.chat_completion(settings.OLLAMA_ENDPOINT, settings.OLLAMA_API_KEY, modelSelect, prompt, base64_images)
     elif "openai" == servingSelect:
         result = await serving_openai.chat_completion(settings.OPENAI_ENDPOINT, settings.OPENAI_API_KEY, modelSelect, prompt, base64_images)
@@ -69,7 +69,33 @@ async def analyze_images(
     
     return JSONResponse(content={"status": "success", "data": results})
 
+from fastapi import FastAPI, Request
+from fastapi.responses import StreamingResponse
+import httpx
+import json
+
 @api_v1_router.post("/proxy")
-async def proxy(request: Request):
-    result = await serving_ollama.text_completion("http://localhost:11434", settings.OLLAMA_API_KEY, "gemma4:e2b", "안녕", [])
-    return JSONResponse(result)
+async def proxy_streaming(request: Request):
+    api_url = request.url.query
+
+    headers = {"Content-Type": "application/json"}
+    auth_header = request.headers.get("Authorization")
+    if auth_header:
+        headers["Authorization"] = auth_header
+
+    payload = await request.json()
+    payload["stream"] = True
+
+    async def event_generator():
+        async with httpx.AsyncClient(timeout=None) as client:
+            async with client.stream("POST", api_url, headers=headers, json=payload) as response:
+                async for chunk in response.aiter_bytes():
+                    if chunk:
+                        yield chunk
+    
+    if "messages" in payload:
+        print("OpenAI 규격 요청입니다.")
+        return StreamingResponse(event_generator(), media_type="text/event-stream")
+    elif "prompt" in payload:
+        print("Ollama 규격 요청입니다.")
+        return StreamingResponse(event_generator(), media_type="application/x-ndjson")

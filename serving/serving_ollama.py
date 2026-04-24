@@ -8,9 +8,8 @@ async def model_availability(api_url, model_name):
             response = await client.get(f"{api_url}/api/tags", timeout=5.0)
             if response.status_code == 200:
                 models_data = response.json().get("models", [])
-                # 모델 이름 목록 추출 (예: 'llama3:latest')
                 available_models = [m.get("name") for m in models_data]
-                
+                # 모델 ID 목록 추출 및 비교
                 if model_name in available_models:
                     logging.info(f"Ollama 모델 '{model_name}' 사용 가능 확인.")
                     return True
@@ -28,8 +27,8 @@ async def text_completion(api_url, api_key, model_name, prompt, base64_images):
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
 
     payload = {"model": model_name, "prompt": prompt, "stream": False}
-    if base64_images and len(base64_images):
-        payload.update({"images": base64_images})
+    if base64_images and len(base64_images) > 0:
+        payload["images"] = base64_images
         
     async with httpx.AsyncClient() as client:
         try:
@@ -47,8 +46,8 @@ async def chat_completion(api_url, api_key, model_name, prompt, base64_images):
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
     
     message = {"role": "user", "content": prompt}
-    if base64_images and len(base64_images):
-        message.update({"images": base64_images})
+    if base64_images and len(base64_images) > 0:
+        message["images"] = base64_images
     payload = {"model": model_name, "messages": [message], "stream": False}
 
     async with httpx.AsyncClient() as client:
