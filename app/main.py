@@ -24,11 +24,11 @@ templates = Jinja2Templates(directory=settings.TEMPLATES_PATH)
 
 @app.get("/")
 async def index(request: Request):
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html",
-        context={}
-    )
+    return templates.TemplateResponse( request=request, name="index.html", context={})
+
+@app.get("/chat")
+async def chat(request: Request):
+    return templates.TemplateResponse( request=request, name="chat.html", context={})
 
 # router
 app.include_router(api_v1_router, prefix="/api/v1", tags=["api-v1"])

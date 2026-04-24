@@ -3,7 +3,7 @@ import gc
 import logging
 from app.core.config import settings
 from fastapi import APIRouter
-from fastapi import File, UploadFile, HTTPException, Form
+from fastapi import Form, File, UploadFile, Request, HTTPException
 from fastapi.responses import JSONResponse
 from typing import List
 # serving
@@ -68,3 +68,8 @@ async def analyze_images(
     gc.collect()
     
     return JSONResponse(content={"status": "success", "data": results})
+
+@api_v1_router.post("/proxy")
+async def proxy(request: Request):
+    result = await serving_ollama.text_completion("http://localhost:11434", settings.OLLAMA_API_KEY, "gemma4:e2b", "안녕", [])
+    return JSONResponse(result)
