@@ -63,9 +63,6 @@ async def analyze_images(
     logging.info(f"분석 종료: {idx}")
     result["idx"] = idx
     results.append(result)
-
-    # 메모리 정리
-    gc.collect()
     
     return JSONResponse(content={"status": "success", "data": results})
 
