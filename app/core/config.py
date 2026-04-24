@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     OLLAMA_ENDPOINT: str = "http://localhost:11434"
     # OPENAI API URL
     OPENAI_ENDPOINT: str = "http://localhost:8000"
+    OPENAI_API_KEY: str = ""
 
     # 환경 변수
     PROJECT_NAME: str = "Python LLM Serving"

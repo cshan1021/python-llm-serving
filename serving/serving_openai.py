@@ -34,17 +34,22 @@ async def model_availability(model):
     return False
 
 async def text_completion(model):
-    if not await model_availability(model):
-        return {}
+    # 모델명 확인 안함
+    # if not await model_availability(model):
+    #    return {}
 
     payload = {
         "model": model,
         "prompt": prompt,
         "stream": False
     }
+    headers = {
+            "Authorization": f"Bearer {settings.OPENAI_API_KEY}",
+            "Content-Type": "application/json"
+    }
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.post(f"{settings.OPENAI_ENDPOINT}/v1/completions", json=payload, timeout=600.0)
+            response = await client.post(f"{settings.OPENAI_ENDPOINT}/v1/completions", json=payload, headers=headers, timeout=600.0)
             response = response.json()
             return get_content(response)
         except Exception as e:
@@ -52,8 +57,9 @@ async def text_completion(model):
             return {}
 
 async def chat_completion(model, base64_images):
-    if not await model_availability(model):
-        return {}
+    # 모델명 확인 안함
+    # if not await model_availability(model):
+    #    return {}
 
     payload = {
         "model": model,
