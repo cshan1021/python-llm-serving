@@ -5,7 +5,7 @@ import httpx
 from app.core.config import settings
 from fastapi import APIRouter
 from fastapi import Form, File, UploadFile, Request, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from typing import List
 # serving
 from serving import serving_ollama
@@ -69,11 +69,6 @@ async def analyze_images(
     
     return JSONResponse(content={"status": "success", "data": results})
 
-from fastapi import FastAPI, Request
-from fastapi.responses import StreamingResponse
-import httpx
-import json
-
 @api_v1_router.post("/proxy")
 async def proxy_streaming(request: Request):
     api_url = request.url.query
@@ -94,8 +89,8 @@ async def proxy_streaming(request: Request):
                         yield chunk
     
     if "messages" in payload:
-        print("OpenAI 규격 요청입니다.")
+        logging.info("OpenAI 규격 요청입니다.")
         return StreamingResponse(event_generator(), media_type="text/event-stream")
     elif "prompt" in payload:
-        print("Ollama 규격 요청입니다.")
+        logging.info("Ollama 규격 요청입니다.")
         return StreamingResponse(event_generator(), media_type="application/x-ndjson")
