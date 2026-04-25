@@ -49,132 +49,123 @@
     const fileInput = document.getElementById('fileInput');
     const previewContainer = document.getElementById('preview-container');
     
-    let attachedImagesBase64 = []; // Base64 이미지들을 저장
+    let attachedImagesBase64 = []; 
+    let chatHistory = []; // Ollama 규격에 맞춘 대화 히스토리
 
-    // --- 파일 첨부 관련 기능 ---
-
-    // 클릭으로 파일 선택
+    // --- 파일 처리 (기존과 동일) ---
     dropZone.addEventListener('click', () => fileInput.click());
-
     fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
-
-    // 드래그 앤 드롭 이벤트
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, preventDefaults, false);
-    });
-
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
-    });
-
-    dropZone.addEventListener('drop', (e) => {
-        const dt = e.dataTransfer;
-        handleFiles(dt.files);
-    });
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, (ev) => { ev.preventDefault(); ev.stopPropagation(); }));
+    dropZone.addEventListener('dragover', () => dropZone.classList.add('dragover'));
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => { dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
 
     function handleFiles(files) {
-        const filesArray = Array.from(files);
-        filesArray.forEach(file => {
+        Array.from(files).forEach(file => {
             if (file.type.startsWith('image/')) {
-                const reader = new ModelFileReader();
+                const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = (e) => {
-                    const base64String = e.target.result;
-                    attachedImagesBase64.push(base64String.split(',')[1]); // Base64 데이터만 추출
-                    addPreview(base64String);
+                    attachedImagesBase64.push(e.target.result);
+                    addPreview(e.target.result);
                 };
             }
         });
     }
 
-    // FileReader의 별칭 (브라우저 호환성)
-    function ModelFileReader() { return new FileReader(); }
-
     function addPreview(src) {
         const div = document.createElement('div');
         div.className = 'preview-item';
-        div.innerHTML = `
-            <img src="${src}">
-            <span class="remove-btn">×</span>
-        `;
+        div.innerHTML = `<img src="${src}"><span class="remove-btn">×</span>`;
         div.querySelector('.remove-btn').onclick = () => {
-            // 프리뷰 제거 시 attachedImagesBase64에서도 해당 이미지 삭제 로직 필요 (간략화를 위해 단순화)
+            attachedImagesBase64 = attachedImagesBase64.filter(i => i !== src);
             div.remove();
-            refreshImageArray(src);
         };
         previewContainer.appendChild(div);
     }
 
-    function refreshImageArray(src) {
-        // 실제 구현 시에는 index로 관리하는 것이 정확함
-        const index = attachedImagesBase64.findIndex(img => src.includes(img)); // 매우 간략한 예시
-        // 여기서는 복잡도를 낮추기 위해 단순화된 로직 사용 (실제로는 전체 재계산 권장)
-    }
-
-    // --- 채팅 로직 ---
+    // --- Ollama 채팅 로직 ---
     async function sendMessage() {
         const text = userInput.value.trim();
+        // Ollama는 로컬 실행 시 보통 API Key가 필요 없으나, 프록시 설정에 따라 유지 가능
+        //const apiKey = document.getElementById('apiKey').value;
         if (!text && attachedImagesBase64.length === 0) return;
 
         const apiBase = document.getElementById('apiBase').value.replace(/\/$/, "");
         const model = document.getElementById('modelName').value;
 
-        // 1. 사용자 메시지 UI 추가
-        appendMessage('user', text, attachedImagesBase64.map(b64 => `data:image/png;base64,${b64}`));
-
-        // 2. 전송할 데이터 준비
-        const payload = {
-            model: model,
-            prompt: text,
-            images: [...attachedImagesBase64] // Base64 배열
+        // 1. Ollama용 메시지 구조 생성
+        // Ollama는 이미지를 base64 데이터만(접두어 data:image/png;base64, 제거) images 배열로 받습니다.
+        const msgImages = attachedImagesBase64.map(base64 => base64.split(',')[1]);
+        
+        const userMsgObj = { 
+            role: "user", 
+            content: text,
+            ...(msgImages.length > 0 && { images: msgImages })
         };
+        
+        chatHistory.push(userMsgObj);
 
-        // 입력창 초기화
+        // UI 업데이트
+        appendMessage('user', text, [...attachedImagesBase64]);
+        
         userInput.value = '';
-        const imagesToSend = [...attachedImagesBase64];
+        const currentImages = [...attachedImagesBase64]; // UI용 백업
         attachedImagesBase64 = []; 
         previewContainer.innerHTML = '';
 
-        // 3. API 호출
         try {
-            const response = await fetch(`/api/v1/proxy?${apiBase}/api/generate`, {
+            // Ollama 기본 엔드포인트는 /api/chat 입니다.
+            const response = await fetch(`/api/v1/proxy?${apiBase}/api/chat`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                headers: { 
+                    'Content-Type': 'application/json'
+                    // 'Authorization' 헤더는 Ollama 기본 설정에선 필요 없으므로 상황에 따라 제거/유지
+                },
+                body: JSON.stringify({
+                    model: model,
+                    messages: chatHistory,
+                    stream: true
+                })
             });
 
-            if (!response.ok) throw new Error('API 호출 실패');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Ollama 호출 실패');
+            }
 
-            // Ollama /api/generate는 스트리밍 방식이 기본이므로 응답 처리
+            const aiMsgDiv = appendMessage('assistant', '');
             const reader = response.body.getReader();
+            const decoder = new TextDecoder();
             let assistantText = "";
-            
-            // 어시스턴트 메시지용 빈 말풍선 생성
-            const aiMsgDiv = appendMessage('assistant', '...');
 
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
 
-                const chunk = new TextDecoder().decode(value);
+                const chunk = decoder.decode(value, { stream: true });
+                // Ollama 스트림은 각 행이 독립된 JSON 객체입니다.
                 const lines = chunk.split('\n');
-                
+
                 for (const line of lines) {
                     if (!line.trim()) continue;
-                    const json = JSON.parse(line);
-                    if (json.response) {
-                        assistantText += json.response;
-                        aiMsgDiv.innerText = assistantText; // 텍스트 업데이트
-                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+                    try {
+                        const json = JSON.parse(line);
+                        
+                        if (json.message && json.message.content) {
+                            const content = json.message.content;
+                            assistantText += content;
+                            aiMsgDiv.innerText = assistantText;
+                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        }
+
+                        if (json.done) {
+                            // 대화 종료 시 히스토리에 추가
+                            chatHistory.push({ role: "assistant", content: assistantText });
+                        }
+                    } catch (e) { 
+                        console.error("JSON 파싱 에러:", e, "Line:", line); 
                     }
                 }
             }
@@ -189,17 +180,15 @@
         div.className = `message ${role}-message`;
         div.innerText = text;
 
-        if (images.length > 0) {
-            images.forEach(imgSrc => {
-                const img = document.createElement('img');
-                img.src = imgSrc;
-                div.appendChild(img);
-            });
-        }
+        images.forEach(imgSrc => {
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            div.appendChild(img);
+        });
 
         messagesDiv.appendChild(div);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        return div; // 텍스트 업데이트를 위해 엘리먼트 반환
+        return div;
     }
 
     sendBtn.addEventListener('click', sendMessage);
