@@ -6,6 +6,7 @@ from fastapi import APIRouter
 from fastapi import Form, File, UploadFile, Request, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
 from typing import List
+from urllib.parse import unquote
 # serving
 from serving import serving_ollama
 from serving import serving_openai
@@ -68,6 +69,8 @@ async def analyze_images(
 @api_v1_router.post("/proxy")
 async def proxy_streaming(request: Request):
     api_url = request.url.query
+    api_url = unquote(api_url)
+    api_url = api_url.strip()
 
     headers = {"Content-Type": "application/json"}
     auth_header = request.headers.get("Authorization")
